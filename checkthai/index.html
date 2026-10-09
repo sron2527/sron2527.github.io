@@ -4,7 +4,7 @@
 <meta name="referrer" content="no-referrer-when-downgrade">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ghost Cam AI V1.3.14 — กล้องสดวิเคราะห์ความผิดปกติ</title>
+<title>Ghost Cam AI V1.3.14.1 — กล้องสดวิเคราะห์ความผิดปกติ</title>
 <meta name="description" content="กล้องสดบนเว็บ ตรวจจับโครงร่างและการเคลื่อนไหว พร้อมให้ Gemini AI วิเคราะห์เฟรมจากกล้องเป็นระยะเพื่อความบันเทิง">
 <meta name="theme-color" content="#020706">
 <meta name="google-adsense-account" content="ca-pub-2159748672978364">
@@ -38,7 +38,7 @@ video,.overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover
 .ghostModalBtn{width:100%;min-height:48px;border:0;border-radius:13px;background:linear-gradient(90deg,#2ddf8d,#7affc0);color:#00160e;font-weight:950;font-size:15px;cursor:pointer}
 
 
-/* V1.3.14 Mobile Fast Mode */
+/* V1.3.14.1 Mobile Fast Mode */
 .fastBadge{display:none;border:1px solid rgba(57,255,155,.38);background:rgba(8,43,29,.86);color:#75ffb9;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:950;letter-spacing:.4px}
 body.mobileFast .fastBadge{display:inline-flex}
 body.mobileFast .fog{animation:none!important;filter:blur(42px);opacity:.08}
@@ -142,7 +142,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
 </div>
 <header><div class="nav"><div class="logo" aria-label="GHOST CAM AI"></div><div class="brand"><b>GHOST CAM AI</b><small>Live anomaly scanner • Entertainment</small></div><div id="fastBadge" class="fastBadge">⚡ MOBILE FAST</div><div id="livePill" class="livepill">● CAMERA OFF</div><div class="langSwitch" aria-label="Language"><button id="langTh" class="langBtn">ไทย</button><button id="langEn" class="langBtn">ENG</button></div></div></header>
 <main>
- <div class="intro"><div><h1 id="pageTitle">V1.3.14 กล้องส่องผี AI</h1><p id="pageSub">ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.14 LIVE</span></div>
+ <div class="intro"><div><h1 id="pageTitle">V1.3.14.1 กล้องส่องผี AI</h1><p id="pageSub">ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.14.1 LIVE</span></div>
  <section id="stage" class="stage">
   <video id="video" autoplay muted playsinline></video>
   <canvas id="overlay" class="overlay"></canvas>
@@ -233,7 +233,7 @@ let stream=null,facing="environment",cameraOn=false,aiScanning=false,aiBusy=fals
 const mobileFast=window.matchMedia("(max-width: 820px)").matches||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"");
 const poseDelay=mobileFast?360:180;
 const motionDelay=mobileFast?700:450;
-const aiInterval=mobileFast?14000:10000;
+const aiInterval=mobileFast?12000:10000;
 document.body.classList.toggle("mobileFast",mobileFast);
 let soundEnabled=true,audioCtx=null,masterGain=null,audioCompressor=null,ambientGain=null,ambientNodes=[],lastSignalSoundAt=0;
 let audioVolume=Math.max(.2,Math.min(1,Number(localStorage.getItem("ghostVolume"))||.95));
@@ -241,7 +241,7 @@ let hapticSupported=typeof navigator.vibrate==="function",hapticEnabled=localSto
 let currentLang=localStorage.getItem("ghostLang")||((navigator.language||"").toLowerCase().startsWith("th")?"th":"en");
 const I18N={
  th:{
-  pageTitle:"V1.3.14 กล้องส่องผี AI",pageSub:"ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ",
+  pageTitle:"V1.3.14.1 กล้องส่องผี AI",pageSub:"ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ",
   emptyTitle:"เปิดกล้องเพื่อเริ่มสแกน",emptyText:"ใช้กล้องหลังมือถือแบบสด ระบบวาดโครงร่างที่ตรวจพบในเครื่อง และส่งภาพนิ่งจากกล้องไปให้ Gemini วิเคราะห์เป็นช่วง ๆ",openCamera:"📷 เปิดกล้องสด",
   scanStart:"🤖 เริ่ม AI SCAN",scanActive:"🟢 AI SCAN ทำงาน",shot:"📸 บันทึกภาพ",switchCam:"🔄 สลับกล้อง",
   resultHeading:"🔎 ผลวิเคราะห์ล่าสุด",waitScan:"รอเริ่มสแกน",resultIntro:"เปิดกล้องก่อน แล้วกด “เริ่ม AI SCAN” ระบบจะวิเคราะห์เฟรมจากกล้องสดประมาณทุก 10 วินาที",
@@ -257,7 +257,7 @@ const I18N={
   possibleCause:"สาเหตุที่เป็นไปได้: ",scanFailed:"AI Scan ไม่สำเร็จ",tryAgain:"กรุณาลองใหม่",cameraPermission:"เปิดกล้องไม่ได้ กรุณาอนุญาตสิทธิ์กล้องให้เว็บไซต์ แล้วลองใหม่อีกครั้ง",openFirst:"กรุณาเปิดกล้องก่อนครับ",ageConfidence:"มั่นใจ",hapticOn:"📳 การสั่น ON",hapticOff:"📵 การสั่น OFF",hapticNA:"📳 เครื่องนี้ไม่รองรับการสั่น",volumeLabel:"🔊 ระดับเสียง"
  },
  en:{
-  pageTitle:"V1.3.14 Ghost Cam AI",pageSub:"Live camera + pose detection + periodic Gemini frame analysis",
+  pageTitle:"V1.3.14.1 Ghost Cam AI",pageSub:"Live camera + pose detection + periodic Gemini frame analysis",
   emptyTitle:"Open camera to start scanning",emptyText:"Uses your live camera, draws detected pose outlines in the browser, and periodically sends a reduced still frame to Gemini for analysis.",openCamera:"📷 OPEN LIVE CAMERA",
   scanStart:"🤖 START AI SCAN",scanActive:"🟢 AI SCAN ACTIVE",shot:"📸 CAPTURE",switchCam:"🔄 SWITCH CAMERA",
   resultHeading:"🔎 Latest Analysis",waitScan:"Waiting to scan",resultIntro:"Open the camera, then press “START AI SCAN”. The system analyzes a live-camera frame about every 10 seconds.",
@@ -472,7 +472,7 @@ function grabFrame(){
 function renderLocalFallback(reason=""){
  const localScore=Math.max(0,Math.min(65,Math.round(motion*.55+(lastPoseCount?28:0))));
  const level=localScore>=40?"medium":"idle";
- const title=lastPoseCount?tr("humanDetected"):(currentLang==="en"?"Cloud AI delayed • Live Sensor active":"AI Cloud ตอบช้า • ใช้ Live Sensor ชั่วคราว");
+ const title=lastPoseCount?(currentLang==="en"?"Human-like pose detected • Local Fast Mode":"ตรวจพบโครงร่างคล้ายบุคคล • Local Fast Mode"):(currentLang==="en"?"Fast local result • Cloud AI unavailable":"แสดงผลแบบเร็วจากเครื่อง • Cloud AI ยังไม่ตอบ");
  updateOverlay(title,localScore,tr("unknown"),tr("unknown"),level,tr("unknown"),0);
  setText("resultTitle",title);
  setText("resultText",currentLang==="en"
@@ -488,7 +488,7 @@ function renderLocalFallback(reason=""){
 async function analyzeFrame(){
  if(!cameraOn||aiBusy)return;aiBusy=true;setText("aiState","SCANNING");playScanTick();updateOverlay(tr("analyzing"),aiScanScore,tr("estimating"),tr("estimating"),"medium");
  try{
-  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),mobileFast?6800:9800);
+  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),mobileFast?8500:11000);
   let res;try{res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({frame:grabFrame(),motion,poseCount:lastPoseCount,lang:currentLang,mobileFast}),signal:ctrl.signal})}finally{clearTimeout(timer)}
   const d=await res.json().catch(()=>({}));if(!res.ok)throw new Error((d.error||"AI วิเคราะห์ไม่ได้")+(d.code?" ("+d.code+")":""));
   aiScanScore=Math.round(d.anomalyScore||0);scanCount++;setText("scanCount",scanCount);setText("score",aiScanScore);$("meterBar").style.width=aiScanScore+"%";addRadarBlip(aiScanScore>=70?"high":aiScanScore>=40?"medium":"low");setText("radarText",aiScanScore>=70?"HIGH SIGNAL":aiScanScore>=40?"SIGNAL FOUND":"RADAR ACTIVE");lastAiResultAt=Date.now();const level=aiScanScore>=70?"high":aiScanScore>=40?"medium":"idle";const headline=d.humanLike?tr("humanDetected")+(d.zone?" • "+d.zone:""):(aiScanScore>=40?tr("visualAnomaly"):tr("nothingClear"));updateOverlay(headline,aiScanScore,d.apparentAge||tr("unknown"),d.eraImpression||tr("unknown"),level,d.appearancePresentation||tr("unknown"),d.appearanceConfidence||0);if(aiScanScore>=70){playHighSignalSound();vibrateAlert("high")}else if(aiScanScore>=40||d.humanLike){playSignalSound();vibrateAlert("medium")}
@@ -496,7 +496,7 @@ async function analyzeFrame(){
   setText("humanLike",d.humanLike?tr("found"):tr("unclear"));setText("zone",d.zone||"—");setText("confidence",Math.round(d.confidence||0)+"%");setText("ageDetail",(d.apparentAge||tr("unknown"))+(d.ageConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.ageConfidence)+"%)":""));setText("eraDetail",d.eraImpression||tr("unknown"));
   setText("appearanceDetail",(d.appearancePresentation||tr("unknown"))+(d.appearanceConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.appearanceConfidence)+"%)":""));
   const obs=[...(d.observations||[]),...(d.possibleCauses||[]).map(x=>tr("possibleCause")+x)];$("observations").innerHTML=obs.map(x=>"<li>"+escapeHtml(x)+"</li>").join("");
- }catch(e){const msg=String(e?.message||"");if(e?.name==="AbortError"||/AI_TIMEOUT|MODEL_UNAVAILABLE|GEMINI_404/.test(msg)){renderLocalFallback(msg)}else{setText("resultTitle",tr("scanFailed"));setText("resultText",msg||tr("tryAgain"));}}
+ }catch(e){const msg=String(e?.message||"");renderLocalFallback(msg);setText("aiState",aiScanning?"LOCAL":"IDLE");}
  finally{aiBusy=false;setText("aiState",aiScanning?"ACTIVE":"IDLE")}
 }
 
