@@ -10,17 +10,18 @@ async function gemini(parts){
  const fastMode=Boolean(parts?.[0]?.text?.includes("__MOBILE_FAST__"));
  const models=[
   process.env.GEMINI_FAST_MODEL,
-  "gemini-2.5-flash-lite",
+  "gemini-3.5-flash-lite",
   process.env.GEMINI_MODEL,
-  "gemini-2.5-flash"
+  "gemini-3.6-flash",
+  "gemini-2.5-flash-lite"
  ].filter((x,i,a)=>x&&a.indexOf(x)===i);
- const started=Date.now(),deadline=fastMode?5600:8500;
+ const started=Date.now(),deadline=fastMode?7200:9800;
  let last=null,all404=true;
  for(const model of models){
   const elapsed=Date.now()-started,remaining=deadline-elapsed;
   if(remaining<1200)break;
   const ctrl=new AbortController();
-  const perModel=Math.min(fastMode?2800:4200,remaining);
+  const perModel=Math.min(fastMode?4600:5600,remaining);
   const timer=setTimeout(()=>ctrl.abort(),perModel);
   try{
    const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{
@@ -28,7 +29,7 @@ async function gemini(parts){
     headers:{"Content-Type":"application/json","x-goog-api-key":key},
     body:JSON.stringify({
      contents:[{parts}],
-     generationConfig:{responseMimeType:"application/json",maxOutputTokens:fastMode?280:420}
+     generationConfig:{responseMimeType:"application/json",maxOutputTokens:fastMode?220:360}
     }),
     signal:ctrl.signal
    });
@@ -49,7 +50,7 @@ async function gemini(parts){
 }
 export default async function handler(req,res){
  cors(req,res);res.setHeader("Cache-Control","no-store");if(req.method==="OPTIONS")return res.status(204).end();
- if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.14"});
+ if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.14.1"});
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
   if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:req.body?.lang==="en"?"AI is not ready yet":"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
