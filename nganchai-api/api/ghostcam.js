@@ -4,10 +4,53 @@ function clean(v,max=500){return String(v??"").replace(/[\u0000-\u001F\u007F]/g,
 function imagePart(dataUrl){const m=String(dataUrl||"").match(/^data:(image\/(?:jpeg|jpg|png|webp));base64,([A-Za-z0-9+/=]+)$/i);if(!m)return null;const bytes=Math.floor(m[2].length*3/4);if(bytes>1600000)throw new Error("IMAGE_TOO_LARGE");return {inline_data:{mime_type:m[1].replace("image/jpg","image/jpeg"),data:m[2]}}}
 function parseJson(text){let t=String(text||"").trim();const a=t.indexOf("{"),b=t.lastIndexOf("}");if(a>=0&&b>a)t=t.slice(a,b+1);return JSON.parse(t)}
 function textOf(d){return (d?.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("\n").trim()}
-async function gemini(parts){const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;if(!key)throw new Error("NOT_CONFIGURED");const models=[process.env.GEMINI_FAST_MODEL,"gemini-3.5-flash-lite","gemini-2.5-flash-lite",process.env.GEMINI_MODEL,"gemini-2.5-flash","gemini-2.0-flash"].filter((x,i,a)=>x&&a.indexOf(x)===i);let last;for(const model of models){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),10000);try{const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:.1,responseMimeType:"application/json",maxOutputTokens:640}}),signal:ctrl.signal});if(r.ok)return await r.json();const body=await r.text();last=new Error("Gemini "+r.status+" "+model+" "+body.slice(0,300));if(![404,429,500,502,503,504].includes(r.status))throw last}catch(e){last=e}finally{clearTimeout(timer)}}throw last||new Error("AI_FAILED")}
+async function gemini(parts){
+ const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;
+ if(!key)throw new Error("NOT_CONFIGURED");
+ const models=[
+  process.env.GEMINI_FAST_MODEL,
+  "gemini-3.5-flash-lite",
+  "gemini-3.8-flash",
+  "gemini-2.5-flash-lite",
+  process.env.GEMINI_MODEL,
+  "gemini-2.5-flash"
+ ].filter((x,i,a)=>x&&a.indexOf(x)===i);
+ const started=Date.now(),deadline=8500;
+ let last=null,all404=true;
+ for(const model of models){
+  const elapsed=Date.now()-started,remaining=deadline-elapsed;
+  if(remaining<1200)break;
+  const ctrl=new AbortController();
+  const perModel=Math.min(4200,remaining);
+  const timer=setTimeout(()=>ctrl.abort(),perModel);
+  try{
+   const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-goog-api-key":key},
+    body:JSON.stringify({
+     contents:[{parts}],
+     generationConfig:{responseMimeType:"application/json",maxOutputTokens:420}
+    }),
+    signal:ctrl.signal
+   });
+   if(r.ok)return await r.json();
+   const body=await r.text();
+   const err=new Error("Gemini "+r.status+" "+model+" "+body.slice(0,180));
+   last=err;
+   if(r.status!==404)all404=false;
+   if(![404,429,500,502,503,504].includes(r.status))throw err;
+  }catch(e){
+   last=e;
+   if(e?.name!=="AbortError")all404=false;
+  }finally{clearTimeout(timer)}
+ }
+ if(all404)throw new Error("MODEL_UNAVAILABLE");
+ if(Date.now()-started>=deadline || last?.name==="AbortError")throw new Error("AI_TIMEOUT");
+ throw last||new Error("AI_FAILED");
+}
 export default async function handler(req,res){
  cors(req,res);res.setHeader("Cache-Control","no-store");if(req.method==="OPTIONS")return res.status(204).end();
- if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.11"});
+ if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.12"});
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
   if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:req.body?.lang==="en"?"AI is not ready yet":"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
@@ -16,18 +59,10 @@ export default async function handler(req,res){
   const poseCount=Math.max(0,Math.min(10,Number(req.body?.poseCount)||0));
   const lang=req.body?.lang==="en"?"en":"th";
   const prompt=[
-   lang==="en"?"You are an image-analysis system for the Ghost Cam AI entertainment web app":"คุณเป็นระบบวิเคราะห์ภาพสำหรับเว็บ Ghost Cam AI เพื่อความบันเทิง",
-   lang==="en"?"Analyze only what is visibly present. Do not claim ghosts, spirits, or supernatural entities are factual":"วิเคราะห์เฉพาะสิ่งที่มองเห็นได้จริงในภาพ ห้ามอ้างว่าตรวจพบผี วิญญาณ หรือสิ่งเหนือธรรมชาติเป็นข้อเท็จจริง",
-   lang==="en"?"Look for people, human-like shapes, shadows, reflections, objects that may fool pose detection, blur, and visual anomalies":"ให้มองหา บุคคล รูปร่างคล้ายคน เงา แสงสะท้อน วัตถุที่อาจทำให้ระบบ pose เข้าใจผิด ความเบลอ และความผิดปกติทางภาพ",
-   "Device values: motion="+motion+"%, poseCount="+poseCount,
-   lang==="en"?"If a visible person has enough facial/body detail, estimate apparentAge as a range such as 15-25 years. Never give an exact age":"ถ้ามีบุคคลที่เห็นใบหน้า/สรีระพอสมควร ให้ประมาณ apparentAge เป็นช่วงอายุที่มองเห็น เช่น 15-25 ปี เท่านั้น ห้ามระบุอายุแน่นอน",
-   lang==="en"?"If only a shadow or unclear outline is visible, set apparentAge to Unable to estimate":"ถ้าเป็นเพียงเงา โครงร่าง หรือมองไม่เห็นใบหน้าชัด ให้ apparentAge เป็น ระบุไม่ได้",
-   lang==="en"?"eraImpression is only a visual impression from clothes, image color and scene, e.g. contemporary, vintage-looking, unable to determine. Never claim it is the age of a spirit":"eraImpression เป็นเพียงความรู้สึกจากเสื้อผ้า สีภาพ และฉาก เช่น ร่วมสมัย, ดูย้อนยุค, ระบุไม่ได้ ห้ามอ้างว่าเป็นอายุของวิญญาณ",
-   lang==="en"?"appearancePresentation must describe only visible presentation, using one of: masculine-presenting, feminine-presenting, or unable to determine. Do not claim gender identity or biological sex":"appearancePresentation ให้บรรยายเฉพาะลักษณะที่มองเห็น โดยใช้ ดูคล้ายผู้ชาย, ดูคล้ายผู้หญิง หรือ ระบุไม่ได้ เท่านั้น ห้ามฟันธงอัตลักษณ์ทางเพศหรือเพศกำเนิด",
-   lang==="en"?"appearanceConfidence is confidence 0-100 in that visible presentation estimate":"appearanceConfidence คือความมั่นใจ 0-100 ของการประเมินลักษณะที่มองเห็น",
-   lang==="en"?"anomalyScore is a 0-100 visual-anomaly score, not a ghost probability":"anomalyScore เป็นคะแนนความผิดปกติทางภาพ 0-100 ไม่ใช่คะแนนว่ามีผี",
-   lang==="en"?"Return JSON only. All natural-language string values MUST be English":"ตอบ JSON เท่านั้น และค่าข้อความธรรมชาติทั้งหมดต้องเป็นภาษาไทย",
-   lang==="en"?'{"summary":"short English description","anomalyScore":0,"humanLike":false,"people":0,"zone":"approximate position","observations":["visible observation"],"possibleCauses":["ordinary possible cause"],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine","appearancePresentation":"unable to determine","appearanceConfidence":0}':'{"summary":"คำอธิบายภาษาไทยสั้นๆ","anomalyScore":0,"humanLike":false,"people":0,"zone":"ตำแหน่งโดยประมาณ","observations":["สิ่งที่เห็น"],"possibleCauses":["สาเหตุธรรมดาที่เป็นไปได้"],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้","appearancePresentation":"ระบุไม่ได้","appearanceConfidence":0}'
+   lang==="en"?"Analyze this camera frame for the Ghost Cam AI entertainment app. Describe ONLY visible evidence; never claim a ghost/spirit is real.":"วิเคราะห์เฟรมกล้องนี้สำหรับแอป Ghost Cam AI เพื่อความบันเทิง อธิบายเฉพาะสิ่งที่มองเห็น ห้ามยืนยันว่ามีผีหรือวิญญาณจริง",
+   "motion="+motion+"%, poseCount="+poseCount,
+   lang==="en"?"Return compact JSON. Detect human-like shape, approximate zone, visual anomaly 0-100, 1-3 observations, ordinary causes, confidence, apparent age RANGE only if clearly visible, era impression, and visible presentation as masculine-presenting/feminine-presenting/unable to determine.":"ตอบ JSON แบบสั้น ตรวจรูปร่างคล้ายคน ตำแหน่ง คะแนนความผิดปกติ 0-100 สิ่งที่เห็น 1-3 ข้อ สาเหตุธรรมดา ความมั่นใจ ช่วงอายุเมื่อเห็นชัด ลักษณะยุค และลักษณะที่มองเห็นเป็น ดูคล้ายผู้ชาย/ดูคล้ายผู้หญิง/ระบุไม่ได้",
+   lang==="en"?'{"summary":"","anomalyScore":0,"humanLike":false,"people":0,"zone":"","observations":[],"possibleCauses":[],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine","appearancePresentation":"unable to determine","appearanceConfidence":0}':'{"summary":"","anomalyScore":0,"humanLike":false,"people":0,"zone":"","observations":[],"possibleCauses":[],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้","appearancePresentation":"ระบุไม่ได้","appearanceConfidence":0}'
   ].join("\n");
   const d=await gemini([{text:prompt},frame]);const x=parseJson(textOf(d));
   const apparentAge=clean(x.apparentAge,80)||(lang==="en"?"Unable to estimate":"ระบุไม่ได้");
@@ -50,5 +85,13 @@ export default async function handler(req,res){
    appearanceConfidence:Math.max(0,Math.min(100,Number(x.appearanceConfidence)||0)),
    disclaimer:lang==="en"?"Age and appearance are estimates from visible presentation for entertainment only. They do not establish gender identity, biological sex, or anything supernatural":"อายุและลักษณะที่แสดงเป็นการประเมินจากสิ่งที่มองเห็นเพื่อความบันเทิง ไม่ใช่การยืนยันอัตลักษณ์ทางเพศ เพศกำเนิด หรือสิ่งเหนือธรรมชาติ"
   });
- }catch(e){const msg=String(e?.message||e);console.error("ghostcam",msg);if(msg.includes("IMAGE_TOO_LARGE"))return res.status(413).json({error:"ภาพจากกล้องมีขนาดใหญ่เกินไป"});const m=msg.match(/Gemini\s+(\d{3})/);return res.status(502).json({error:"AI วิเคราะห์เฟรมนี้ไม่สำเร็จ กรุณาลองใหม่",code:m?"GEMINI_"+m[1]:"AI_ERROR"})}
+ }catch(e){
+  const msg=String(e?.message||e);console.error("ghostcam",msg);
+  const lang=req.body?.lang==="en"?"en":"th";
+  if(msg.includes("IMAGE_TOO_LARGE"))return res.status(413).json({error:lang==="en"?"Camera image is too large":"ภาพจากกล้องมีขนาดใหญ่เกินไป",code:"IMAGE_TOO_LARGE"});
+  if(msg.includes("AI_TIMEOUT"))return res.status(504).json({error:lang==="en"?"AI took too long. Using local sensor data instead.":"AI ตอบช้าเกินไป ระบบจะใช้ข้อมูลเซ็นเซอร์ในเครื่องชั่วคราว",code:"AI_TIMEOUT"});
+  if(msg.includes("MODEL_UNAVAILABLE"))return res.status(503).json({error:lang==="en"?"AI model is temporarily unavailable.":"โมเดล AI ไม่พร้อมใช้งานชั่วคราว",code:"MODEL_UNAVAILABLE"});
+  const m=msg.match(/Gemini\s+(\d{3})/);
+  return res.status(502).json({error:lang==="en"?"AI could not analyze this frame. Please scan again.":"AI วิเคราะห์เฟรมนี้ไม่สำเร็จ กรุณาสแกนใหม่",code:m?"GEMINI_"+m[1]:"AI_ERROR"});
+ }
 }
