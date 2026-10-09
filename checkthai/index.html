@@ -43,13 +43,21 @@ body{
 .fog2{width:560px;height:560px;background:rgba(94,255,165,.11);bottom:-8%;right:-14%;animation-duration:27s}
 .fog3{width:360px;height:360px;background:rgba(225,255,241,.06);top:44%;left:36%;animation-duration:18s}
 .eerie-glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(57,255,155,.045),transparent 32%);animation:eeriePulse 4.8s ease-in-out infinite}
-.shadow-figure{position:absolute;width:90px;height:240px;right:5%;top:28%;opacity:.035;filter:blur(8px);animation:shadowSway 10s ease-in-out infinite alternate}
-.shadow-figure:before{content:"";position:absolute;left:27px;top:0;width:36px;height:36px;border-radius:50%;background:#9effca}
-.shadow-figure:after{content:"";position:absolute;left:18px;top:34px;width:54px;height:170px;border-radius:50% 50% 44% 44%;background:linear-gradient(180deg,rgba(158,255,202,.82),rgba(158,255,202,0))}
+.shadow-figure{position:absolute;width:120px;height:300px;opacity:.13;filter:blur(3px) drop-shadow(0 0 18px rgba(138,255,196,.16));animation:shadowSway 9s ease-in-out infinite alternate}
+.shadow-figure.left{left:2%;top:22%;transform:scale(.95)}
+.shadow-figure.right{right:2%;top:36%;transform:scale(.78);animation-delay:-4s}
+.shadow-figure:before{content:"";position:absolute;left:38px;top:0;width:44px;height:54px;border-radius:52% 48% 46% 54%;background:radial-gradient(circle at 38% 38%,rgba(220,255,235,.92),rgba(116,255,181,.58) 48%,rgba(52,155,108,.05) 72%);box-shadow:0 0 24px rgba(126,255,185,.16)}
+.shadow-figure:after{content:"";position:absolute;left:22px;top:48px;width:76px;height:220px;border-radius:48% 52% 40% 40%/20% 20% 78% 78%;background:linear-gradient(180deg,rgba(164,255,207,.72) 0%,rgba(113,238,173,.34) 42%,rgba(113,238,173,0) 100%);clip-path:polygon(20% 0,80% 0,92% 34%,78% 47%,100% 100%,62% 78%,52% 100%,38% 78%,0 100%,22% 47%,8% 34%)}
 body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:rgba(255,255,255,.015);animation:flicker 7s infinite}
 .stage{box-shadow:0 0 0 1px rgba(57,255,155,.13),0 0 42px rgba(57,255,155,.09),0 24px 72px rgba(0,0,0,.58)}
 .card,.ctrl,.tag,.meter,.fact{backdrop-filter:blur(10px)}
 .intro h1,.resultTitle{text-shadow:0 0 12px rgba(57,255,155,.13)}
+
+.shadow-figure i{position:absolute;z-index:2;left:50px;top:20px;width:8px;height:8px;border-radius:50%;background:#06110c;box-shadow:20px 1px 0 #06110c,10px 18px 0 -1px rgba(4,12,8,.88)}
+.shadow-figure em{position:absolute;z-index:1;left:8px;top:95px;width:104px;height:118px;border-radius:50%;background:radial-gradient(circle,rgba(154,255,205,.10),transparent 66%);filter:blur(10px)}
+@keyframes ghostBlink{0%,86%,100%{opacity:.12}88%{opacity:.22}91%{opacity:.09}94%{opacity:.18}}
+.shadow-figure{animation:shadowSway 9s ease-in-out infinite alternate,ghostBlink 7s linear infinite}
+
 @keyframes floatFog{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(48px,-30px,0) scale(1.12)}}
 @keyframes eeriePulse{0%,100%{opacity:.28}50%{opacity:.72}}
 @keyframes bgDrift{0%{transform:translate3d(-1%,0,0) scale(1)}100%{transform:translate3d(2%,-1%,0) scale(1.05)}}
@@ -65,11 +73,12 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
  <div class="fog fog2"></div>
  <div class="fog fog3"></div>
  <div class="eerie-glow"></div>
- <div class="shadow-figure"></div>
+ <div class="shadow-figure left"><i></i><em></em></div>
+ <div class="shadow-figure right"><i></i><em></em></div>
 </div>
 <header><div class="nav"><div class="logo">👻</div><div class="brand"><b>GHOST CAM AI</b><small>Live anomaly scanner • Entertainment</small></div><div id="livePill" class="livepill">● CAMERA OFF</div></div></header>
 <main>
- <div class="intro"><div><h1>V1.3.1 กล้องส่องผี AI</h1><p>ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.1 LIVE</span></div>
+ <div class="intro"><div><h1>V1.3.2 กล้องส่องผี AI</h1><p>ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.2 LIVE</span></div>
  <section id="stage" class="stage">
   <video id="video" autoplay muted playsinline></video>
   <canvas id="overlay" class="overlay"></canvas>
