@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>เช็คของไทย AI — เช็คพระและของเก่าจากภาพ</title>
+<meta name="description" content="ถ่ายรูปพระเครื่องหรือของเก่า ให้ AI ช่วยระบุประเภท รุ่น ยุค วัสดุ และค้นช่วงราคาตลาดจากข้อมูลอ้างอิง">
+<meta name="theme-color" content="#17130d">
+<meta name="google-adsense-account" content="ca-pub-2159748672978364">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2159748672978364" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f6f3ed;--ink:#272015;--muted:#776d60;--gold:#b98632;--gold2:#e6b75f;--dark:#1b1711;--card:#fff;--line:#e8e0d3;--green:#178a61;--red:#b84d40;--blue:#426fc4;--shadow:0 16px 45px rgba(65,48,23,.11)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:"Noto Sans Thai",system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(180deg,#f9f6f0,#f3eee5);color:var(--ink)}button,input,textarea{font:inherit}button{cursor:pointer}a{color:inherit}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.93);backdrop-filter:blur(14px);border-bottom:1px solid #eee6da}
+.nav{max-width:1180px;margin:auto;height:68px;padding:0 18px;display:flex;align-items:center;gap:12px}.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,#342817,#c6933e);display:grid;place-items:center;color:#fff;font-size:22px;box-shadow:0 8px 20px rgba(115,80,25,.22)}.brand b{font-size:20px}.brand small{display:block;color:#8b7b65;font-size:10px;margin-top:-2px}.privacy{margin-left:auto;border:0;background:#f4efe6;color:#6d5b40;border-radius:12px;padding:8px 10px;font-size:11px;font-weight:800}
+.wrap{max-width:1180px;margin:auto;padding:18px 18px 70px}
+.hero{background:radial-gradient(circle at 85% 15%,rgba(230,183,95,.36),transparent 30%),linear-gradient(135deg,#1c1710,#3c2c17);color:white;border-radius:24px;padding:30px;min-height:220px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero h1{font-size:38px;line-height:1.12;margin:0 0 10px}.hero h1 span{color:#f2c66f}.hero p{color:#ddd2c0;line-height:1.65;max-width:700px;margin:0}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.badges span{font-size:10px;font-weight:800;padding:7px 9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.11);border-radius:999px}
+.adbox{min-height:96px;margin:18px 0;background:rgba(255,255,255,.66);border:1px dashed #d8cdbd;border-radius:16px;display:grid;place-items:center;text-align:center;color:#9a8c78;font-size:10px;padding:12px}.adbox b{display:block;color:#756854;margin-bottom:3px}
+.mode-title{font-size:19px;margin:24px 0 10px}.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mode{border:1px solid var(--line);background:#fff;border-radius:18px;padding:17px;text-align:left;box-shadow:0 6px 18px rgba(69,52,26,.05);position:relative}.mode.active{border-color:#c99b50;box-shadow:0 0 0 3px #f4e4c8}.mode-icon{font-size:30px}.mode h3{margin:8px 0 3px;font-size:15px}.mode p{margin:0;color:var(--muted);font-size:10.5px;line-height:1.5}.check{position:absolute;right:12px;top:12px;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#efe8dc;color:#9a8b75;font-size:12px}.mode.active .check{background:#b98632;color:#fff}
+.panel{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.panel h2{font-size:18px;margin:0}.panel-head p{font-size:10.5px;color:var(--muted);margin:3px 0 0}.step{background:#f6efe2;color:#8a6324;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;white-space:nowrap}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:12px}.photo{border:1px dashed #cdbfa9;background:#fbf9f5;border-radius:17px;overflow:hidden;min-height:245px;display:flex;flex-direction:column}.preview{flex:1;min-height:175px;display:grid;place-items:center;background:linear-gradient(135deg,#f7f2e9,#eee6d9);position:relative;overflow:hidden}.preview img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0}.placeholder{text-align:center;color:#9b8d79}.placeholder i{font-style:normal;font-size:34px;display:block;margin-bottom:5px}.placeholder b{font-size:12px}.placeholder small{display:block;font-size:9.5px;margin-top:3px}.photo-actions{padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:7px;background:#fff}.cam,.gallery{border:0;border-radius:10px;padding:8px 7px;font-size:10px;font-weight:900}.cam{background:linear-gradient(90deg,#9b6c26,#c6994a);color:#fff}.gallery{background:#f1ede6;color:#675a48}
+.note{margin-top:12px}.note label{font-size:11px;font-weight:800}.note textarea{width:100%;margin-top:6px;border:1px solid #ddd2c2;border-radius:12px;min-height:74px;padding:10px;outline:0;resize:vertical}.note textarea:focus{border-color:#bd934e;box-shadow:0 0 0 3px #f6ead6}
+.analyze{width:100%;margin-top:13px;border:0;border-radius:14px;padding:13px;color:#fff;font-weight:900;background:linear-gradient(90deg,#8d6122,#c7943f);box-shadow:0 9px 23px rgba(153,104,31,.22)}.analyze:disabled{opacity:.55;cursor:not-allowed}
+.status{display:none;margin-top:12px;border-radius:12px;padding:10px 12px;background:#f5f1ea;color:#716552;font-size:10.5px}.status.show{display:flex;align-items:center;gap:8px}.spin{width:15px;height:15px;border:2px solid #d8c8ae;border-top-color:#9d6f27;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.result{display:none;margin-top:17px}.result.show{display:block}.result-card{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}.result-top{padding:19px;background:linear-gradient(135deg,#211a11,#5c401d);color:#fff}.confidence{display:inline-block;border-radius:999px;padding:5px 8px;background:rgba(255,255,255,.12);font-size:9.5px;font-weight:900}.result-top h2{margin:9px 0 4px;font-size:23px}.result-top p{margin:0;color:#dfd4c1;font-size:11px}.result-body{padding:17px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.kv{background:#f8f5f0;border:1px solid #eee5d8;border-radius:12px;padding:10px}.kv span{display:block;color:#91816d;font-size:9px}.kv b{display:block;margin-top:3px;font-size:12px;line-height:1.45}.section{margin-top:16px}.section h3{font-size:13px;margin:0 0 7px}.section p{font-size:11px;color:#695f52;line-height:1.7;margin:0}.price{background:linear-gradient(135deg,#fff8e8,#fff);border:1px solid #eddbb6;border-radius:15px;padding:14px}.price b{font-size:24px;color:#9d6c20}.price small{display:block;color:#87765f;margin-top:4px;line-height:1.5}.sources{display:grid;gap:7px}.source{display:flex;align-items:center;gap:9px;border:1px solid #e7dfd2;border-radius:11px;padding:9px;text-decoration:none}.source span{min-width:0}.source b{display:block;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.source small{display:block;color:#8e8272;font-size:9px}.warn{margin-top:15px;background:#fff2ef;border:1px solid #f0d3cc;color:#8c5046;border-radius:13px;padding:11px;font-size:10px;line-height:1.6}
+.how{margin-top:26px}.how h2{font-size:18px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.steps div{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px}.steps b{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#f1e3cc;color:#8e6428}.steps h3{font-size:12px;margin:8px 0 4px}.steps p{font-size:10px;color:var(--muted);line-height:1.55;margin:0}
+footer{background:#19150f;color:#cfc4b3;padding:23px 18px}.foot{max-width:1180px;margin:auto;font-size:10px;line-height:1.6}.foot b{color:#f0d39a}
+dialog{border:0;border-radius:18px;max-width:680px;width:calc(100% - 28px);padding:0;box-shadow:0 30px 90px rgba(0,0,0,.3)}dialog::backdrop{background:rgba(20,15,10,.55)}.dlg{padding:24px;position:relative}.dlg h2{margin:0 35px 9px 0}.dlg p{font-size:11px;color:#6f6354;line-height:1.7}.close{position:absolute;right:11px;top:11px;border:0;border-radius:50%;width:33px;height:33px}
+@media(max-width:680px){.wrap{padding:12px 12px 55px}.hero{padding:23px 18px;border-radius:18px}.hero h1{font-size:31px}.modes{grid-template-columns:1fr 1fr}.photos{grid-template-columns:1fr}.photo{min-height:225px}.preview{min-height:180px}.grid{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr}.privacy{font-size:9px}.brand b{font-size:18px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="logo">🔎</div><div class="brand"><b>เช็คของไทย AI</b><small>พระเครื่อง • ของเก่า • ของสะสม</small></div><button class="privacy" onclick="privacyDlg.showModal()">🔒 ไม่เก็บรูปถาวร</button></div></header>
+<main class="wrap">
+ <section class="hero"><h1>ถ่ายรูป แล้วให้ AI<br><span>ช่วยค้นว่าเป็นอะไร</span></h1><p>ใช้กล้องมือถือถ่ายด้านหน้าและด้านหลัง ระบบช่วยวิเคราะห์ลักษณะ ค้นข้อมูลอ้างอิง และสรุปช่วงราคาที่พบในตลาดออนไลน์</p><div class="badges"><span>📷 ถ่ายจากมือถือ</span><span>🤖 วิเคราะห์ด้วย AI</span><span>🌐 ค้นข้อมูลอ้างอิง</span><span>💰 ประเมินเป็นช่วงราคา</span></div></section>
+ <div class="adbox"><div><b>พื้นที่โฆษณา Google AdSense</b>พร้อมใส่ Ad Unit หลังสร้างหน่วยโฆษณาสำหรับเช็คของไทย</div></div>
+
+ <h2 class="mode-title">เลือกสิ่งที่ต้องการเช็ค</h2>
+ <div class="modes">
+  <button class="mode active" data-mode="amulet" onclick="setMode('amulet')"><span class="check">✓</span><div class="mode-icon">🪬</div><h3>เช็คพระเครื่อง</h3><p>ช่วยระบุพิมพ์ รุ่น วัด เกจิ ช่วงปี เนื้อ และข้อมูลตลาดที่ใกล้เคียง</p></button>
+  <button class="mode" data-mode="antique" onclick="setMode('antique')"><span class="check">✓</span><div class="mode-icon">🏺</div><h3>เช็คของเก่า</h3><p>เหรียญ ธนบัตร เครื่องลายคราม นาฬิกา ของสะสม และของโบราณทั่วไป</p></button>
+ </div>
+
+ <section class="panel">
+  <div class="panel-head"><div><h2 id="panelTitle">ถ่ายพระเครื่อง</h2><p>ภาพชัด แสงดี และเต็มองค์ จะช่วยให้วิเคราะห์ได้ดีขึ้น</p></div><span class="step">STEP 1</span></div>
+  <div class="photos">
+   <div class="photo"><div class="preview" id="previewFront"><div class="placeholder"><i>📿</i><b>ด้านหน้า</b><small>ถ่ายให้เห็นเต็มชิ้น</small></div></div><div class="photo-actions"><button class="cam" onclick="frontCam.click()">📷 เปิดกล้อง</button><button class="gallery" onclick="frontFile.click()">🖼️ เลือกรูป</button></div></div>
+   <div class="photo"><div class="preview" id="previewBack"><div class="placeholder"><i>🔄</i><b>ด้านหลัง</b><small>แนะนำให้ถ่ายเพิ่ม</small></div></div><div class="photo-actions"><button class="cam" onclick="backCam.click()">📷 เปิดกล้อง</button><button class="gallery" onclick="backFile.click()">🖼️ เลือกรูป</button></div></div>
+  </div>
+  <input id="frontCam" type="file" accept="image/*" capture="environment" hidden>
+  <input id="backCam" type="file" accept="image/*" capture="environment" hidden>
+  <input id="frontFile" type="file" accept="image/*" hidden>
+  <input id="backFile" type="file" accept="image/*" hidden>
+  <div class="note"><label>ข้อมูลเพิ่มเติม (ถ้ามี)</label><textarea id="note" placeholder="เช่น ขนาดประมาณ 3 ซม., มีตัวหนังสือด้านหลัง, ได้มาจากบ้านเก่า จ.อยุธยา..."></textarea></div>
+  <button id="analyzeBtn" class="analyze" onclick="analyze()">✨ วิเคราะห์และค้นข้อมูล</button>
+  <div id="status" class="status"><span class="spin"></span><span id="statusText">กำลังวิเคราะห์ภาพ...</span></div>
+ </section>
+
+ <section id="result" class="result">
+  <div class="result-card">
+   <div class="result-top"><span id="confidence" class="confidence">ความมั่นใจในการระบุ —</span><h2 id="resultName">ผลการวิเคราะห์</h2><p id="resultSummary"></p></div>
+   <div class="result-body">
+    <div class="grid"><div class="kv"><span>ประเภท / รุ่น</span><b id="rType">—</b></div><div class="kv"><span>วัด / ผู้สร้าง / แหล่งที่มา</span><b id="rOrigin">—</b></div><div class="kv"><span>ช่วงปี / ยุค</span><b id="rEra">—</b></div><div class="kv"><span>วัสดุ / เนื้อ</span><b id="rMaterial">—</b></div></div>
+    <div class="section"><h3>🔍 จุดสังเกตจากภาพ</h3><p id="rFeatures">—</p></div>
+    <div class="section"><h3>💰 ช่วงราคาที่พบ</h3><div class="price"><b id="rPrice">ยังประเมินไม่ได้</b><small id="rPriceNote">ราคาเป็นข้อมูลอ้างอิงจากตลาดออนไลน์ ไม่ใช่ราคาซื้อขายรับประกัน</small></div></div>
+    <div class="section"><h3>🌐 แหล่งข้อมูลอ้างอิง</h3><div id="rSources" class="sources"><p>ยังไม่มีแหล่งอ้างอิง</p></div></div>
+    <div class="warn"><b>⚠️ สำคัญ:</b> ระบบนี้ช่วยคัดกรองจากภาพและข้อมูลออนไลน์เท่านั้น ไม่ใช่ใบรับรองพระแท้/ของแท้ และไม่ควรใช้เป็นเหตุผลเดียวในการซื้อขายสินค้ามูลค่าสูง ควรตรวจของจริงกับผู้เชี่ยวชาญอีกครั้ง</div>
+   </div>
+  </div>
+ </section>
+
+ <div class="adbox"><div><b>พื้นที่โฆษณา Google AdSense</b>ตำแหน่งหลังผลวิเคราะห์ เว้นระยะจากปุ่มถ่ายภาพและปุ่มวิเคราะห์</div></div>
+
+ <section class="how"><h2>ใช้งานง่าย 3 ขั้นตอน</h2><div class="steps"><div><b>1</b><h3>เลือกโหมด</h3><p>เลือกเช็คพระเครื่องหรือของเก่าให้ตรงกับวัตถุที่ต้องการตรวจ</p></div><div><b>2</b><h3>ถ่ายหน้า–หลัง</h3><p>วางบนพื้นเรียบ ใช้แสงธรรมชาติ และหลีกเลี่ยงภาพเบลอหรือแสงสะท้อน</p></div><div><b>3</b><h3>ดูผลและอ้างอิง</h3><p>อ่านผลการระบุ ช่วงราคา และเปิดแหล่งข้อมูลเพื่อเทียบเพิ่มเติมก่อนตัดสินใจ</p></div></div></section>
+</main>
+<footer><div class="foot"><b>เช็คของไทย AI</b><br>เครื่องมือช่วยค้นและระบุจากภาพ ไม่ใช่บริการรับรองความแท้หรือประเมินราคาทางวิชาชีพ</div></footer>
+
+<dialog id="privacyDlg"><div class="dlg"><button class="close" onclick="privacyDlg.close()">×</button><h2>ความเป็นส่วนตัว</h2><p>V1 ออกแบบให้ส่งภาพไปวิเคราะห์แบบคำขอครั้งเดียวและไม่สร้างคลังรูปผู้ใช้บนเว็บไซต์ รูปไม่ได้ถูกบันทึกลง GitHub หรือฐานข้อมูลของเช็คของไทย AI</p><p>การวิเคราะห์ใช้ผู้ให้บริการ AI ภายนอก จึงอยู่ภายใต้นโยบายการประมวลผลของผู้ให้บริการนั้นด้วย กรุณาอย่าถ่ายเอกสารส่วนตัว บุคคล หรือข้อมูลที่ไม่เกี่ยวข้องติดเข้ามาในภาพ</p></div></dialog>
+<script>
+const API="https://nganchai-api.vercel.app/api/checkthai";
+let mode="amulet",frontData="",backData="";
+const $=id=>document.getElementById(id);
+function setMode(m){mode=m;document.querySelectorAll(".mode").forEach(x=>x.classList.toggle("active",x.dataset.mode===m));$("panelTitle").textContent=m==="amulet"?"ถ่ายพระเครื่อง":"ถ่ายของเก่า / ของสะสม";$("note").placeholder=m==="amulet"?"เช่น ขนาดประมาณ 3 ซม., มีตัวหนังสือด้านหลัง, ทราบชื่อวัดหรือที่มา...":"เช่น ขนาด น้ำหนัก ยี่ห้อ ตัวเลข/ตราประทับ ประเทศที่ได้มา..."}
+async function compress(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{let w=img.width,h=img.height,max=1280;if(w>max||h>max){const r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r)}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);URL.revokeObjectURL(url);resolve(c.toDataURL("image/jpeg",.82))};img.onerror=reject;img.src=url})}
+async function handleFile(file,side){if(!file)return;try{const data=await compress(file);if(side==="front")frontData=data;else backData=data;const p=$(side==="front"?"previewFront":"previewBack");p.innerHTML=`<img src="${data}" alt="${side==="front"?"ด้านหน้า":"ด้านหลัง"}">`}catch{alert("เปิดรูปไม่สำเร็จ กรุณาลองรูปอื่น")}}
+["frontCam","frontFile"].forEach(id=>$(id).addEventListener("change",e=>handleFile(e.target.files[0],"front")));
+["backCam","backFile"].forEach(id=>$(id).addEventListener("change",e=>handleFile(e.target.files[0],"back")));
+function status(text){$("statusText").textContent=text;$("status").classList.add("show")}
+function safe(v,f="—"){return v==null||v===""?f:String(v)}
+function sourcesHtml(src){if(!Array.isArray(src)||!src.length)return"<p>AI ยังไม่พบแหล่งอ้างอิงที่ชัดเจน ควรค้นเพิ่มเติมก่อนซื้อขาย</p>";return src.slice(0,8).map(s=>{let u="#";try{u=new URL(s.url).href}catch{}return `<a class="source" href="${u}" target="_blank" rel="noopener"><span>🔗</span><span><b>${safe(s.title,"แหล่งข้อมูล")}</b><small>${safe(s.domain,safe(s.url,""))}</small></span></a>`}).join("")}
+function render(r){$("confidence").textContent=`ความมั่นใจในการระบุ ${Math.round(Number(r.confidence)||0)}%`;$("resultName").textContent=safe(r.name,"ยังระบุไม่ได้ชัดเจน");$("resultSummary").textContent=safe(r.summary,"ควรถ่ายภาพเพิ่มเติมเพื่อช่วยการระบุ");$("rType").textContent=safe(r.type);$("rOrigin").textContent=safe(r.origin);$("rEra").textContent=safe(r.era);$("rMaterial").textContent=safe(r.material);$("rFeatures").textContent=Array.isArray(r.features)?r.features.join(" • "):safe(r.features);$("rPrice").textContent=safe(r.priceRange,"ยังประเมินไม่ได้");$("rPriceNote").textContent=safe(r.priceNote,"ช่วงราคาจากข้อมูลออนไลน์อาจแตกต่างตามสภาพ ความแท้ ความนิยม และช่วงเวลา");$("rSources").innerHTML=sourcesHtml(r.sources);$("result").classList.add("show");$("result").scrollIntoView({behavior:"smooth",block:"start"})}
+async function analyze(){if(!frontData){alert("กรุณาถ่ายหรือเลือกรูปด้านหน้าก่อนครับ");return}const btn=$("analyzeBtn");btn.disabled=true;status("กำลังดูรายละเอียดจากภาพ...");$("result").classList.remove("show");try{const timer=setTimeout(()=>status("กำลังค้นข้อมูลและช่วงราคาที่เกี่ยวข้อง..."),3500);const res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode,note:$("note").value.trim(),front:frontData,back:backData})});clearTimeout(timer);const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||"ระบบวิเคราะห์ยังไม่พร้อม");render(data)}catch(e){alert(e.message+"\n\nหากเพิ่งเปิด V1 อาจยังต้องตั้งค่า Gemini API ที่ Vercel ก่อนครับ")}finally{btn.disabled=false;$("status").classList.remove("show")}}
+</script>
+</body></html>
