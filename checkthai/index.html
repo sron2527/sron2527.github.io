@@ -430,14 +430,14 @@ function capture(){
  const a=document.createElement("a");a.download="ghostcam-"+new Date().toISOString().replace(/[:.]/g,"-")+".jpg";a.href=c.toDataURL("image/jpeg",.9);a.click();
 }
 async function switchCamera(){facing=facing==="environment"?"user":"environment";await startCamera()}
-$("startBtn").onclick=startCamera;$("scanBtn").onclick=toggleScan;$("nightBtn").onclick=toggleNight;$("shotBtn").onclick=capture;$("switchBtn").onclick=switchCamera;$("soundBtn").onclick=toggleSound;$("hapticBtn").onclick=toggleHaptic;$("langTh").onclick=()=>applyLang("th");$("langEn").onclick=()=>applyLang("en");$("ghostModalBtn").onclick=closeGhostAlert;$("ghostModalBack").onclick=e=>{if(e.target===$("ghostModalBack"))closeGhostAlert()};applyLang(currentLang);
+$("startBtn").onclick=startCamera;$("scanBtn").onclick=toggleScan;$("nightBtn").onclick=toggleNight;$("shotBtn").onclick=capture;$("switchBtn").onclick=switchCamera;$("soundBtn").onclick=toggleSound;$("hapticBtn").onclick=toggleHaptic;$("langTh").onclick=()=>applyLang("th");$("langEn").onclick=()=>applyLang("en");applyLang(currentLang);
 </script>
 
-<div id="ghostModalBack" class="ghostModalBack" role="dialog" aria-modal="true" aria-labelledby="ghostModalTitle">
+<div id="ghostModalBack" class="ghostModalBack" role="dialog" aria-modal="true" aria-labelledby="ghostModalTitle" onclick="if(event.target===this)closeGhostAlert()">
  <div class="ghostModal">
   <div class="ghostModalTitle" id="ghostModalTitle"><div class="ghostModalLogo">👻</div><span>GHOST CAM AI</span></div>
   <div id="ghostModalText" class="ghostModalText"></div>
-  <button id="ghostModalBtn" class="ghostModalBtn">OK</button>
+  <button id="ghostModalBtn" class="ghostModalBtn" type="button" onclick="closeGhostAlert()">OK</button>
  </div>
 </div>
 </body></html>
