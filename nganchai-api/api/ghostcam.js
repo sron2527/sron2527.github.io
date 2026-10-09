@@ -7,31 +7,32 @@ function textOf(d){return (d?.candidates?.[0]?.content?.parts||[]).map(p=>p.text
 async function gemini(parts){const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;if(!key)throw new Error("NOT_CONFIGURED");const models=[process.env.GEMINI_MODEL,"gemini-2.5-flash","gemini-2.0-flash"].filter((x,i,a)=>x&&a.indexOf(x)===i);let last;for(const model of models){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),18000);try{const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:.12,responseMimeType:"application/json"}}),signal:ctrl.signal});if(r.ok)return await r.json();const body=await r.text();last=new Error("Gemini "+r.status+" "+model+" "+body.slice(0,300));if(![404,429,500,502,503,504].includes(r.status))throw last}catch(e){last=e}finally{clearTimeout(timer)}}throw last||new Error("AI_FAILED")}
 export default async function handler(req,res){
  cors(req,res);res.setHeader("Cache-Control","no-store");if(req.method==="OPTIONS")return res.status(204).end();
- if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.4"});
+ if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.6"});
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
-  if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
-  const frame=imagePart(req.body?.frame);if(!frame)return res.status(400).json({error:"ไม่พบภาพจากกล้อง"});
+  if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:req.body?.lang==="en"?"AI is not ready yet":"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
+  const frame=imagePart(req.body?.frame);if(!frame)return res.status(400).json({error:req.body?.lang==="en"?"No camera image received":"ไม่พบภาพจากกล้อง"});
   const motion=Math.max(0,Math.min(100,Number(req.body?.motion)||0));
   const poseCount=Math.max(0,Math.min(10,Number(req.body?.poseCount)||0));
+  const lang=req.body?.lang==="en"?"en":"th";
   const prompt=[
-   "คุณเป็นระบบวิเคราะห์ภาพสำหรับเว็บ Ghost Cam AI เพื่อความบันเทิง",
-   "วิเคราะห์เฉพาะสิ่งที่มองเห็นได้จริงในภาพ ห้ามอ้างว่าตรวจพบผี วิญญาณ หรือสิ่งเหนือธรรมชาติเป็นข้อเท็จจริง",
-   "ให้มองหา บุคคล รูปร่างคล้ายคน เงา แสงสะท้อน วัตถุที่อาจทำให้ระบบ pose เข้าใจผิด ความเบลอ และความผิดปกติทางภาพ",
-   "ค่าจากอุปกรณ์: motion="+motion+"%, poseCount="+poseCount,
-   "ถ้ามีบุคคลที่เห็นใบหน้า/สรีระพอสมควร ให้ประมาณ apparentAge เป็นช่วงอายุที่มองเห็น เช่น 15-25 ปี เท่านั้น ห้ามระบุอายุแน่นอน",
-   "ถ้าเป็นเพียงเงา โครงร่าง หรือมองไม่เห็นใบหน้าชัด ให้ apparentAge เป็น ระบุไม่ได้",
-   "eraImpression เป็นเพียงความรู้สึกจากเสื้อผ้า สีภาพ และฉาก เช่น ร่วมสมัย, ดูย้อนยุค, ระบุไม่ได้ ห้ามอ้างว่าเป็นอายุของวิญญาณหรือว่ามีอายุ 100 ปีจริง",
-   "anomalyScore เป็นคะแนนความผิดปกติทางภาพ 0-100 ไม่ใช่คะแนนว่ามีผี",
-   "ตอบ JSON เท่านั้น:",
-   '{"summary":"คำอธิบายภาษาไทยสั้นๆ","anomalyScore":0,"humanLike":false,"people":0,"zone":"ตำแหน่งโดยประมาณ","observations":["สิ่งที่เห็น"],"possibleCauses":["สาเหตุธรรมดาที่เป็นไปได้"],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้"}'
+   lang==="en"?"You are an image-analysis system for the Ghost Cam AI entertainment web app":"คุณเป็นระบบวิเคราะห์ภาพสำหรับเว็บ Ghost Cam AI เพื่อความบันเทิง",
+   lang==="en"?"Analyze only what is visibly present. Do not claim ghosts, spirits, or supernatural entities are factual":"วิเคราะห์เฉพาะสิ่งที่มองเห็นได้จริงในภาพ ห้ามอ้างว่าตรวจพบผี วิญญาณ หรือสิ่งเหนือธรรมชาติเป็นข้อเท็จจริง",
+   lang==="en"?"Look for people, human-like shapes, shadows, reflections, objects that may fool pose detection, blur, and visual anomalies":"ให้มองหา บุคคล รูปร่างคล้ายคน เงา แสงสะท้อน วัตถุที่อาจทำให้ระบบ pose เข้าใจผิด ความเบลอ และความผิดปกติทางภาพ",
+   "Device values: motion="+motion+"%, poseCount="+poseCount,
+   lang==="en"?"If a visible person has enough facial/body detail, estimate apparentAge as a range such as 15-25 years. Never give an exact age":"ถ้ามีบุคคลที่เห็นใบหน้า/สรีระพอสมควร ให้ประมาณ apparentAge เป็นช่วงอายุที่มองเห็น เช่น 15-25 ปี เท่านั้น ห้ามระบุอายุแน่นอน",
+   lang==="en"?"If only a shadow or unclear outline is visible, set apparentAge to Unable to estimate":"ถ้าเป็นเพียงเงา โครงร่าง หรือมองไม่เห็นใบหน้าชัด ให้ apparentAge เป็น ระบุไม่ได้",
+   lang==="en"?"eraImpression is only a visual impression from clothes, image color and scene, e.g. contemporary, vintage-looking, unable to determine. Never claim it is the age of a spirit":"eraImpression เป็นเพียงความรู้สึกจากเสื้อผ้า สีภาพ และฉาก เช่น ร่วมสมัย, ดูย้อนยุค, ระบุไม่ได้ ห้ามอ้างว่าเป็นอายุของวิญญาณ",
+   lang==="en"?"anomalyScore is a 0-100 visual-anomaly score, not a ghost probability":"anomalyScore เป็นคะแนนความผิดปกติทางภาพ 0-100 ไม่ใช่คะแนนว่ามีผี",
+   lang==="en"?"Return JSON only. All natural-language string values MUST be English":"ตอบ JSON เท่านั้น และค่าข้อความธรรมชาติทั้งหมดต้องเป็นภาษาไทย",
+   lang==="en"?'{"summary":"short English description","anomalyScore":0,"humanLike":false,"people":0,"zone":"approximate position","observations":["visible observation"],"possibleCauses":["ordinary possible cause"],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine"}':'{"summary":"คำอธิบายภาษาไทยสั้นๆ","anomalyScore":0,"humanLike":false,"people":0,"zone":"ตำแหน่งโดยประมาณ","observations":["สิ่งที่เห็น"],"possibleCauses":["สาเหตุธรรมดาที่เป็นไปได้"],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้"}'
   ].join("\n");
   const d=await gemini([{text:prompt},frame]);const x=parseJson(textOf(d));
-  const apparentAge=clean(x.apparentAge,80)||"ระบุไม่ได้";
-  const eraImpression=clean(x.eraImpression,100)||"ระบุไม่ได้";
+  const apparentAge=clean(x.apparentAge,80)||(lang==="en"?"Unable to estimate":"ระบุไม่ได้");
+  const eraImpression=clean(x.eraImpression,100)||(lang==="en"?"Unable to determine":"ระบุไม่ได้");
   return res.status(200).json({
    ok:true,
-   summary:clean(x.summary,500)||"ยังไม่พบสิ่งผิดปกติชัดเจน",
+   summary:clean(x.summary,500)||(lang==="en"?"No clear anomaly detected":"ยังไม่พบสิ่งผิดปกติชัดเจน"),
    anomalyScore:Math.max(0,Math.min(100,Number(x.anomalyScore)||0)),
    humanLike:Boolean(x.humanLike),
    people:Math.max(0,Math.min(10,Number(x.people)||0)),
@@ -42,7 +43,7 @@ export default async function handler(req,res){
    apparentAge,
    ageConfidence:Math.max(0,Math.min(100,Number(x.ageConfidence)||0)),
    eraImpression,
-   disclaimer:"อายุเป็นเพียงการประมาณจากลักษณะที่มองเห็นในภาพเพื่อความบันเทิง และไม่ใช่การยืนยันสิ่งเหนือธรรมชาติ"
+   disclaimer:lang==="en"?"Age is only an estimate from visible appearance for entertainment and does not confirm anything supernatural":"อายุเป็นเพียงการประมาณจากลักษณะที่มองเห็นในภาพเพื่อความบันเทิง และไม่ใช่การยืนยันสิ่งเหนือธรรมชาติ"
   });
  }catch(e){const msg=String(e?.message||e);console.error("ghostcam",msg);if(msg.includes("IMAGE_TOO_LARGE"))return res.status(413).json({error:"ภาพจากกล้องมีขนาดใหญ่เกินไป"});const m=msg.match(/Gemini\s+(\d{3})/);return res.status(502).json({error:"AI วิเคราะห์เฟรมนี้ไม่สำเร็จ กรุณาลองใหม่",code:m?"GEMINI_"+m[1]:"AI_ERROR"})}
 }
