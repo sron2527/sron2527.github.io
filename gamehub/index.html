@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GameHub TH — เกมออนไลน์ฟรี เล่นได้ทันที</title>
+<meta name="description" content="รวมเกม HTML5 เล่นฟรีบนมือถือและคอม ไม่ต้องดาวน์โหลด ค้นหาเกมตามหมวดและเล่นได้ทันที">
+<meta name="theme-color" content="#0c1020">
+<meta name="google-adsense-account" content="ca-pub-2159748672978364">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2159748672978364" crossorigin="anonymous"></script>
+<style>
+:root{
+ --bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#72809a;--line:#e4e9f2;
+ --dark:#121626;--red:#ff365c;--orange:#ff8a2b;--blue:#4778ff;--cyan:#08b3ce;
+ --green:#12b76a;--purple:#8a5cff;--shadow:0 10px 30px rgba(25,42,74,.10);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,"Noto Sans Thai",system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+button,input{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
+.top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{max-width:1540px;margin:auto;padding:0 24px;height:76px;display:grid;grid-template-columns:260px minmax(280px,650px) 1fr;gap:24px;align-items:center}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:24px}.brand-logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#ff315d,#ff8b20);display:grid;place-items:center;color:#fff;font-size:24px;box-shadow:0 8px 20px rgba(255,58,92,.28)}.brand small{display:block;font-size:10px;color:var(--red);font-weight:800;margin-top:-2px;letter-spacing:.5px}
+.search{height:46px;background:#f1f3f7;border:1px solid transparent;border-radius:14px;display:flex;align-items:center;padding:0 14px;gap:10px}.search:focus-within{background:#fff;border-color:#b9c9ff;box-shadow:0 0 0 4px #eef2ff}.search input{width:100%;border:0;outline:0;background:transparent;font-size:15px}.nav-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px}.nav-btn{border:0;background:#f1f4f8;border-radius:12px;padding:10px 13px;font-weight:800;color:#46546d}.fav-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;background:var(--red);color:#fff;border-radius:999px;font-size:10px;margin-left:4px}
+.wrap{max-width:1540px;margin:auto;padding:22px 24px 70px}
+.hero{background:linear-gradient(120deg,#11162a 0%,#202a52 50%,#3a1760 100%);color:#fff;border-radius:24px;min-height:260px;padding:34px 38px;position:relative;overflow:hidden;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;box-shadow:var(--shadow)}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.7}.hero:before{width:260px;height:260px;background:#ff315d;right:-60px;top:-100px}.hero:after{width:220px;height:220px;background:#00b4d8;right:150px;bottom:-140px}
+.hero h1{font-size:46px;line-height:1.05;margin:0 0 12px;letter-spacing:-1.6px}.hero h1 span{color:#ffbf4a}.hero p{max-width:650px;color:#d9e0f2;line-height:1.65;margin:0}.hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.hero-tags span{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.14);padding:7px 10px;border-radius:999px;font-size:11px;font-weight:700}.hero-tiles{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,92px);gap:10px;justify-content:end}.hero-tile{aspect-ratio:1;border-radius:20px;display:grid;place-items:center;font-size:38px;box-shadow:0 10px 25px rgba(0,0,0,.22);transform:rotate(var(--r))}.hero-tile:nth-child(1){background:#ff9e2c;--r:-7deg}.hero-tile:nth-child(2){background:#04b4d6;--r:5deg}.hero-tile:nth-child(3){background:#8a5cff;--r:-3deg}.hero-tile:nth-child(4){background:#12b76a;--r:4deg}.hero-tile:nth-child(5){background:#ff315d;--r:-6deg}.hero-tile:nth-child(6){background:#4778ff;--r:5deg}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:28px 0 14px}.section-head h2{margin:0;font-size:24px}.section-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.categories{display:flex;gap:10px;overflow:auto;padding:2px 2px 8px;scrollbar-width:none}.categories::-webkit-scrollbar{display:none}.cat{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 3px 12px rgba(32,50,83,.04)}.cat.active{color:#fff;background:var(--dark);border-color:var(--dark)}
+.stats{color:var(--muted);font-size:12px}
+.game-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.game-card{background:var(--card);border-radius:17px;overflow:hidden;border:1px solid var(--line);box-shadow:0 7px 22px rgba(36,55,90,.07);transition:.18s;position:relative}.game-card:hover{transform:translateY(-3px);box-shadow:0 15px 32px rgba(36,55,90,.13)}.thumb{aspect-ratio:4/3;background:linear-gradient(135deg,#1d2440,#5163ff);position:relative;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:.25s}.game-card:hover .thumb img{transform:scale(1.04)}.thumb-fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:42px;color:white}.play-badge{position:absolute;left:10px;bottom:10px;background:rgba(15,20,35,.82);color:#fff;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800;backdrop-filter:blur(5px)}.fav{position:absolute;right:9px;top:9px;width:34px;height:34px;border:0;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 4px 14px rgba(0,0,0,.12);font-size:16px;z-index:2}.game-info{padding:12px}.game-info h3{font-size:13px;line-height:1.35;margin:0 0 6px;min-height:36px}.game-info .meta{display:flex;justify-content:space-between;gap:6px;color:var(--muted);font-size:10px}.game-info button.play{margin-top:10px;width:100%;border:0;border-radius:11px;background:#eef2ff;color:#315ce8;padding:8px;font-size:11px;font-weight:900}.game-info button.play:hover{background:#315ce8;color:white}
+.loadmore{display:block;margin:24px auto 0;border:1px solid #b7c7f2;background:#fff;color:#315ce8;font-weight:900;border-radius:999px;padding:11px 28px}
+.ad-shell{margin:28px auto;text-align:center;min-height:110px;background:#fff;border:1px dashed #d4dce9;border-radius:18px;padding:14px;color:#9aa6b8;font-size:10px;display:grid;place-items:center}.ad-shell b{display:block;color:#75839a;margin-bottom:4px}.ad-note{max-width:760px;line-height:1.5}
+.about-strip{margin-top:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.info-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.info-card b{display:block;font-size:14px;margin-bottom:5px}.info-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.6}
+footer{background:#101421;color:#c5cddd;padding:26px 24px;margin-top:30px}.foot{max-width:1540px;margin:auto;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}.foot small{color:#7f8aa2}.footlinks{display:flex;gap:16px;font-size:11px}.footlinks button{border:0;background:transparent;color:#c5cddd}
+.player-overlay{position:fixed;z-index:100;inset:0;background:#090c14;display:none;overflow:auto}.player-overlay.show{display:block}.player-top{height:64px;position:sticky;top:0;z-index:5;background:#111521;border-bottom:1px solid #252b3b;color:#fff;display:flex;align-items:center;gap:14px;padding:0 18px}.back{border:0;border-radius:11px;background:#252b3b;color:#fff;padding:9px 12px;font-weight:800}.player-title{min-width:0}.player-title b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player-title small{color:#929db4}.player-body{max-width:1250px;margin:auto;padding:20px}.game-stage{background:#000;border-radius:18px;overflow:hidden;aspect-ratio:4/3;max-height:78vh;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.45)}.game-stage iframe{width:100%;height:100%;border:0;display:block}.stage-loader{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:#111521}.stage-loader button{border:0;border-radius:999px;padding:12px 24px;background:linear-gradient(90deg,#ff315d,#ff8c28);color:#fff;font-weight:900}.game-detail{background:#fff;margin-top:20px;border-radius:18px;padding:22px}.game-detail h1{font-size:26px;margin:0 0 8px}.game-detail p{color:#687790;line-height:1.7;font-size:13px}.player-ad-space{margin-top:170px;background:#161b29;border:1px dashed #32394b;color:#7d879c;min-height:110px;border-radius:16px;display:grid;place-items:center;text-align:center;font-size:10px}
+.related{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:14px}.related .game-card{box-shadow:none}
+dialog{border:0;border-radius:18px;max-width:700px;width:calc(100% - 28px);padding:0;box-shadow:0 30px 80px rgba(0,0,0,.25)}dialog::backdrop{background:rgba(10,15,28,.55)}.dlg{padding:26px;position:relative}.dlg h2{margin:0 40px 10px}.dlg p,.dlg li{color:#66748b;line-height:1.75;font-size:12px}.xbtn{position:absolute;right:12px;top:12px;width:34px;height:34px;border:0;border-radius:50%;font-size:18px}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #cbd4e3;border-radius:18px;padding:50px;text-align:center;color:#7d899d}.empty b{display:block;color:#34445e;margin-bottom:4px}
+@media(max-width:1250px){.game-grid{grid-template-columns:repeat(5,1fr)}.related{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:1020px){.nav{grid-template-columns:220px 1fr auto}.game-grid{grid-template-columns:repeat(4,1fr)}.related{grid-template-columns:repeat(4,1fr)}.about-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.nav{height:auto;padding:10px 14px;grid-template-columns:1fr auto;gap:10px}.search{grid-column:1/-1;grid-row:2}.brand{font-size:20px}.brand-logo{width:40px;height:40px}.wrap{padding:14px 12px 55px}.hero{grid-template-columns:1fr;padding:28px 22px}.hero h1{font-size:34px}.hero-tiles{display:none}.game-grid{grid-template-columns:repeat(2,1fr);gap:10px}.related{grid-template-columns:repeat(2,1fr)}.game-info h3{font-size:12px}.about-strip{grid-template-columns:1fr}.player-body{padding:10px}.game-stage{border-radius:10px;aspect-ratio:3/4;max-height:none}.player-title small{display:none}.game-detail{padding:16px}.player-ad-space{margin-top:160px}.nav-actions .nav-btn:first-child{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="nav">
+  <a class="brand" href="#" onclick="goHome();return false">
+   <span class="brand-logo">▶</span>
+   <span>GameHub TH<small>FREE ONLINE GAMES</small></span>
+  </a>
+  <label class="search"><span>🔎</span><input id="searchInput" placeholder="ค้นหาเกม เช่น puzzle, racing, chess..."></label>
+  <div class="nav-actions">
+   <button class="nav-btn" onclick="showRecent()">🕘 เล่นล่าสุด</button>
+   <button class="nav-btn" onclick="showFavorites()">♥ เกมโปรด <span id="favCount" class="fav-count">0</span></button>
+  </div>
+ </div>
+</header>
+
+<main class="wrap" id="homeView">
+ <section class="hero">
+  <div>
+   <h1>เกมออนไลน์ฟรี<br><span>เล่นได้ทันที</span></h1>
+   <p>รวมเกม HTML5 หลายหมวด เล่นได้ทั้งมือถือและคอม ไม่ต้องดาวน์โหลด ไม่ต้องสมัครสมาชิก กดเกมที่ชอบแล้วเริ่มเล่นได้เลย</p>
+   <div class="hero-tags"><span>🎮 เล่นฟรี</span><span>📱 รองรับมือถือ</span><span>⚡ ไม่ต้องติดตั้ง</span><span>🔒 ไม่ต้องสมัคร</span></div>
+  </div>
+  <div class="hero-tiles"><div class="hero-tile">🚗</div><div class="hero-tile">🧩</div><div class="hero-tile">🏀</div><div class="hero-tile">♟️</div><div class="hero-tile">👾</div><div class="hero-tile">🎯</div></div>
+ </section>
+
+ <div class="ad-shell" id="homeAd">
+  <div><b>พื้นที่โฆษณา</b><span class="ad-note">เตรียมไว้สำหรับ Google AdSense — จะใส่ Ad Unit หลังจากสร้างหน่วยโฆษณาสำหรับ GameHub</span></div>
+ </div>
+
+ <section>
+  <div class="section-head">
+   <div><h2>หมวดเกม</h2><p>เลือกแนวที่ชอบ หรือใช้ช่องค้นหาด้านบน</p></div>
+   <div id="gameStats" class="stats">กำลังโหลดเกม...</div>
+  </div>
+  <div id="categoryBar" class="categories"></div>
+ </section>
+
+ <section>
+  <div class="section-head">
+   <div><h2 id="listTitle">เกมแนะนำสำหรับคุณ</h2><p id="listSubtitle">เกมยอดนิยมและเกมเล่นง่ายสำหรับทุกวัย</p></div>
+  </div>
+  <div id="gameGrid" class="game-grid"></div>
+  <button id="loadMore" class="loadmore" onclick="loadMore()">ดูเกมเพิ่มเติม</button>
+ </section>
+
+ <section class="about-strip">
+  <div class="info-card"><b>⚡ เล่นได้ทันที</b><p>เกมโหลดเมื่อกดเล่น ช่วยให้หน้าแรกเปิดเร็วและไม่กินทรัพยากรเกินจำเป็น</p></div>
+  <div class="info-card"><b>📱 มือถือ + คอม</b><p>เกม HTML5 ส่วนใหญ่รองรับหน้าจอสัมผัสและปรับขนาดตามอุปกรณ์</p></div>
+  <div class="info-card"><b>♥ จำเกมโปรด</b><p>รายการโปรดและเล่นล่าสุดเก็บไว้เฉพาะในเบราว์เซอร์ของคุณ ไม่ต้องสร้างบัญชี</p></div>
+  <div class="info-card"><b>🎮 แคตตาล็อกสด</b><p>หน้าเว็บพยายามโหลดรายการเกมจากผู้ให้บริการ และมีรายการสำรองหาก feed ชั่วคราวใช้งานไม่ได้</p></div>
+ </section>
+</main>
+
+<section id="playerView" class="player-overlay">
+ <div class="player-top">
+  <button class="back" onclick="closePlayer()">← กลับ</button>
+  <div class="player-title"><b id="playerTopTitle">เกม</b><small id="playerTopCat">GameHub TH</small></div>
+  <button class="back" style="margin-left:auto" onclick="toggleCurrentFav()">♥</button>
+ </div>
+ <div class="player-body">
+  <div class="game-stage">
+   <div id="stageLoader" class="stage-loader"><button onclick="startGame()">▶ เริ่มเล่นเกม</button></div>
+   <iframe id="gameFrame" title="HTML5 Game" allow="autoplay; fullscreen; gamepad" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <article class="game-detail">
+   <h1 id="detailTitle">เกม</h1>
+   <div class="categories" style="padding:0"><span id="detailCategory" class="cat active"></span></div>
+   <p id="detailDesc"></p>
+   <p><b>วิธีเล่น:</b> ใช้เมาส์ คีย์บอร์ด หรือหน้าจอสัมผัสตามรูปแบบของเกม หากเกมมีคำแนะนำเพิ่มเติม จะปรากฏภายในตัวเกม</p>
+   <p style="font-size:10px;color:#99a3b3">เกมถูกฝังจากผู้ให้บริการภายนอกและอาจมีนโยบาย/เงื่อนไขของผู้ให้บริการนั้นเอง</p>
+  </article>
+
+  <div class="player-ad-space">
+   <div><b>พื้นที่โฆษณา</b><br>เว้นระยะจากพื้นที่เล่นเกมเพื่อป้องกันการคลิกโดยไม่ตั้งใจ</div>
+  </div>
+
+  <div class="section-head" style="color:white"><div><h2>เกมที่เกี่ยวข้อง</h2><p style="color:#7f8aa2">ลองเกมอื่นในหมวดเดียวกัน</p></div></div>
+  <div id="relatedGrid" class="related"></div>
+ </div>
+</section>
+
+<footer>
+ <div class="foot">
+  <div><b>GameHub TH</b><br><small>เว็บรวมเกม HTML5 เล่นฟรีบนเบราว์เซอร์</small></div>
+  <div class="footlinks">
+   <button onclick="openDlg('aboutDlg')">เกี่ยวกับ</button>
+   <button onclick="openDlg('privacyDlg')">ความเป็นส่วนตัว</button>
+   <button onclick="openDlg('termsDlg')">ข้อกำหนด</button>
+   <button onclick="openDlg('contactDlg')">ติดต่อ</button>
+  </div>
+ </div>
+</footer>
+
+<dialog id="aboutDlg"><div class="dlg"><button class="xbtn" onclick="this.closest('dialog').close()">×</button><h2>เกี่ยวกับ GameHub TH</h2><p>GameHub TH เป็นหน้าเว็บรวมเกม HTML5 ที่สามารถเล่นผ่านเบราว์เซอร์ได้โดยไม่ต้องดาวน์โหลด ตัวเกมถูกให้บริการโดยเครือข่ายเกมภายนอกที่อนุญาตการฝังเกมบนเว็บไซต์ Publisher</p><p>เราเน้นการค้นหาเกมง่าย ใช้งานบนมือถือได้ และไม่บังคับให้สมัครสมาชิก</p></div></dialog>
+<dialog id="privacyDlg"><div class="dlg"><button class="xbtn" onclick="this.closest('dialog').close()">×</button><h2>ความเป็นส่วนตัว</h2><p>GameHub TH ไม่ขอชื่อ อีเมล เบอร์โทร หรือข้อมูลระบุตัวตนเพื่อเล่นเกม รายการเกมโปรดและเล่นล่าสุดเก็บใน Local Storage ของเบราว์เซอร์เท่านั้น</p><p>เว็บไซต์อาจใช้ Google AdSense และเกมที่ฝังอาจมาจากผู้ให้บริการภายนอก ซึ่งอาจใช้คุกกี้หรือเทคโนโลยีของตนเองตามนโยบายของแต่ละบริการ</p></div></dialog>
+<dialog id="termsDlg"><div class="dlg"><button class="xbtn" onclick="this.closest('dialog').close()">×</button><h2>ข้อกำหนดการใช้งาน</h2><p>เกมและทรัพย์สินภายในเกมเป็นของผู้พัฒนา/ผู้ให้บริการที่เกี่ยวข้อง GameHub TH ทำหน้าที่เป็นหน้าแคตตาล็อกและพื้นที่ฝังเกมเท่านั้น หากเกมใดมีปัญหาด้านสิทธิ์หรือการเข้าถึง สามารถแจ้งให้เราตรวจสอบและนำออกได้</p></div></dialog>
+<dialog id="contactDlg"><div class="dlg"><button class="xbtn" onclick="this.closest('dialog').close()">×</button><h2>ติดต่อ</h2><p>สำหรับแจ้งปัญหาเกม ลิงก์เสีย หรือเรื่องสิทธิ์ของเนื้อหา สามารถติดต่อผู้ดูแลเว็บไซต์ผ่านช่องทางที่จะเพิ่มในเวอร์ชันเปิดใช้งานจริง</p></div></dialog>
+
+<script>
+const FEED_URL="https://gamezipper.com/api/games.json";
+const FALLBACK=[{"slug": "snake", "name": "Classic Snake", "category": "Arcade", "description": "กินอาหารเพื่อให้ตัวงูยาวขึ้นและหลบกำแพงกับตัวเอง"}, {"slug": "2048", "name": "2048 Galaxy", "category": "Arcade", "description": "เลื่อนตัวเลขและรวมช่องให้ไปถึง 2048"}, {"slug": "tetris", "name": "Tetris", "category": "Arcade", "description": "เรียงบล็อกที่ตกลงมาให้เต็มแถวเพื่อทำคะแนน"}, {"slug": "pong", "name": "Pong", "category": "Arcade", "description": "เกมปิงปองอาร์เคดคลาสสิก เล่นง่ายและรวดเร็ว"}, {"slug": "slope", "name": "Slope", "category": "Arcade", "description": "บังคับลูกบอลบนทางลาด 3D และหลบสิ่งกีดขวาง"}, {"slug": "brick-breaker", "name": "Brick Breaker", "category": "Arcade", "description": "เด้งลูกบอลเพื่อทำลายอิฐให้หมด"}, {"slug": "t-rex", "name": "T-Rex Dino Runner", "category": "Arcade", "description": "กระโดดหลบกระบองเพชรและสิ่งกีดขวาง"}, {"slug": "fruit-slash", "name": "Fruit Slash", "category": "Action", "description": "ปาดผลไม้ให้ทันและทำคอมโบ"}, {"slug": "bubble-shooter", "name": "Bubble Shooter", "category": "Puzzle", "description": "ยิงลูกบอลสีให้จับคู่สามลูกขึ้นไป"}, {"slug": "block-blast", "name": "Block Blast", "category": "Puzzle", "description": "วางบล็อกบนตารางและเคลียร์เส้น"}, {"slug": "parking-jam", "name": "Parking Jam", "category": "Puzzle", "description": "เลื่อนรถให้พ้นทางและแก้ปริศนาการจราจร"}, {"slug": "sudoku", "name": "Classic Sudoku", "category": "Puzzle", "description": "เติมตัวเลขในตารางซูโดกุให้ครบอย่างถูกต้อง"}, {"slug": "crossword", "name": "Crossword Puzzle", "category": "Puzzle", "description": "แก้ปริศนาอักษรไขว้จากคำใบ้"}, {"slug": "nonogram", "name": "Nonogram Puzzle", "category": "Puzzle", "description": "เติมช่องตามตัวเลขเพื่อเปิดภาพพิกเซล"}, {"slug": "minesweeper", "name": "Classic Minesweeper", "category": "Puzzle", "description": "ใช้ตรรกะเปิดช่องและหลบกับระเบิด"}, {"slug": "jigsaw-puzzle", "name": "Jigsaw Puzzle", "category": "Puzzle", "description": "ต่อชิ้นภาพให้สมบูรณ์"}, {"slug": "unblock-me", "name": "Unblock Me", "category": "Puzzle", "description": "เลื่อนชิ้นส่วนเพื่อเปิดทางออก"}, {"slug": "pipe-connect", "name": "Pipe Connect", "category": "Puzzle", "description": "หมุนท่อให้เชื่อมต่อกันอย่างสมบูรณ์"}, {"slug": "wordscapes", "name": "Wordscapes", "category": "Word", "description": "เชื่อมตัวอักษรสร้างคำและเติมปริศนา"}, {"slug": "chess", "name": "Chess", "category": "Strategy", "description": "เล่นหมากรุกคลาสสิกกับบอทหรือเพื่อน"}, {"slug": "checkers", "name": "Checkers", "category": "Strategy", "description": "เดินหมากและกระโดดกินคู่แข่ง"}, {"slug": "solitaire", "name": "Solitaire", "category": "Card", "description": "เล่นไพ่ Klondike Solitaire แบบคลาสสิก"}, {"slug": "mahjong-solitaire", "name": "Mahjong Solitaire", "category": "Strategy", "description": "จับคู่ไพ่นกกระจอกที่เปิดอยู่เพื่อเคลียร์กระดาน"}, {"slug": "tic-tac-toe", "name": "Tic Tac Toe", "category": "Strategy", "description": "เกมสามช่องเรียงแถว เล่นกับเพื่อนหรือบอท"}, {"slug": "brain-out", "name": "Brain Out", "category": "Puzzle", "description": "โจทย์กวน ๆ ที่ต้องคิดนอกกรอบ"}, {"slug": "cut-the-rope", "name": "Cut the Rope", "category": "Puzzle", "description": "ตัดเชือกให้ถูกจังหวะเพื่อส่งขนมไปยังเป้าหมาย"}, {"slug": "neon-run", "name": "Neon Run", "category": "Action", "description": "วิ่งฝ่าทางนีออนและหลบอุปสรรคความเร็วสูง"}, {"slug": "drive-fury", "name": "Drive Fury", "category": "Racing", "description": "ขับรถฝ่าการจราจรด้วยความเร็วสูง"}, {"slug": "level-devil", "name": "Level Devil", "category": "Action", "description": "แพลตฟอร์มสุดกวนกับกับดักที่คาดไม่ถึง"}, {"slug": "escape-manor", "name": "Escape Manor", "category": "Adventure", "description": "แก้ปริศนาเพื่อหนีออกจากคฤหาสน์ลึกลับ"}, {"slug": "physics-draw-puzzle", "name": "Physics Draw Puzzle", "category": "Puzzle", "description": "วาดรูปทรงเพื่อแก้โจทย์ฟิสิกส์"}, {"slug": "sand-balls", "name": "Sand Balls", "category": "Casual", "description": "วาดเส้นนำทรายลงสู่ถัง"}, {"slug": "basketball-shoot", "name": "Basketball Shoot", "category": "Sports", "description": "เล็งและชู้ตบาสให้ลงห่วงก่อนหมดเวลา"}, {"slug": "color-sort", "name": "Crystal Sort Puzzle", "category": "Casual", "description": "แยกสีให้แต่ละหลอดเหลือเพียงสีเดียว"}, {"slug": "watermelon-merge", "name": "Watermelon Merge", "category": "Casual", "description": "รวมผลไม้ชนิดเดียวกันให้ใหญ่ขึ้น"}, {"slug": "triple-tile", "name": "Triple Tile Match", "category": "Casual", "description": "จับคู่ไพ่สามชิ้นเพื่อเคลียร์กระดาน"}, {"slug": "pull-the-pin", "name": "Pull the Pin", "category": "Casual", "description": "ดึงหมุดตามลำดับเพื่อแก้ปริศนา"}, {"slug": "wood-block-puzzle", "name": "Wood Block Puzzle", "category": "Puzzle", "description": "วางบล็อกไม้ให้เต็มแถวเพื่อทำคะแนน"}, {"slug": "bridge-builder", "name": "Bridge Builder", "category": "Simulation", "description": "สร้างสะพานให้แข็งแรงพอรับน้ำหนัก"}, {"slug": "cookie-clicker", "name": "Cookie Clicker", "category": "Casual", "description": "คลิกและอัปเกรดเพื่อสร้างคุกกี้ให้มากขึ้น"}];
+const ADSENSE={home:"",play:""};
+let allGames=[],filtered=[],visible=24,currentCategory="ทั้งหมด",currentGame=null;
+
+function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function norm(v=""){return String(v).toLowerCase().trim()}
+function slugify(v=""){return String(v).trim().toLowerCase().replace(/[^a-z0-9ก-๙]+/g,"-").replace(/^-|-$/g,"")}
+function thumbUrl(g){return g.thumbnail||`https://gamezipper.com/og-images/${encodeURIComponent(g.slug)}.webp`}
+function embedUrl(g){return g.embedUrl||`https://gamezipper.com/${encodeURIComponent(g.slug)}/`}
+function withTracking(url){
+ try{const u=new URL(url);u.searchParams.set("utm_source","sron2527.github.io");u.searchParams.set("utm_medium","embed");u.searchParams.set("utm_campaign","gamehub-th");return u.href}catch{return url}
+}
+function favs(){try{return JSON.parse(localStorage.getItem("gamehub-favs")||"[]")}catch{return[]}}
+function recents(){try{return JSON.parse(localStorage.getItem("gamehub-recents")||"[]")}catch{return[]}}
+function saveFavs(v){localStorage.setItem("gamehub-favs",JSON.stringify(v));updateFavCount()}
+function isFav(slug){return favs().includes(slug)}
+function updateFavCount(){document.getElementById("favCount").textContent=favs().length}
+
+function normalizeGame(g,i){
+ const slug=g.slug||slugify(g.name||g.title||("game-"+i));
+ return {
+   slug,
+   name:g.name||g.title||slug,
+   category:g.category||g.genre||"Other",
+   description:g.description||"เกม HTML5 เล่นฟรีบนเบราว์เซอร์ เล่นได้ทันทีโดยไม่ต้องดาวน์โหลด",
+   thumbnail:g.thumbnail||g.image||"",
+   embedUrl:g.embedUrl||g.embed_url||`https://gamezipper.com/${slug}/`
+ }
+}
+async function loadFeed(){
+ let source="fallback";
+ try{
+  const r=await fetch(FEED_URL,{headers:{Accept:"application/json"}});
+  if(!r.ok)throw new Error("feed "+r.status);
+  const data=await r.json();
+  const arr=Array.isArray(data)?data:(data.games||[]);
+  if(arr.length<10)throw new Error("feed too small");
+  allGames=arr.map(normalizeGame);
+  source="live";
+ }catch(e){
+  console.warn("Game feed fallback",e);
+  allGames=FALLBACK.map(normalizeGame);
+ }
+ // Remove duplicates
+ const seen=new Set();allGames=allGames.filter(g=>{if(!g.slug||seen.has(g.slug))return false;seen.add(g.slug);return true});
+ filtered=[...allGames];
+ renderCategories();
+ renderGames(true);
+ document.getElementById("gameStats").textContent=`${allGames.length.toLocaleString()} เกม • ${source==="live"?"แคตตาล็อกออนไลน์":"รายการสำรอง"}`;
+ handleHash();
+}
+function categories(){
+ const counts={};
+ allGames.forEach(g=>{const c=g.category||"Other";counts[c]=(counts[c]||0)+1});
+ return Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+}
+function catIcon(c){
+ const n=norm(c);
+ if(n.includes("puzzle")||n.includes("logic"))return"🧩";
+ if(n.includes("arcade"))return"👾";
+ if(n.includes("action"))return"⚡";
+ if(n.includes("strategy")||n.includes("board"))return"♟️";
+ if(n.includes("sport"))return"🏀";
+ if(n.includes("race")||n.includes("driv"))return"🏎️";
+ if(n.includes("card"))return"🃏";
+ if(n.includes("adventure"))return"🗺️";
+ if(n.includes("simulation"))return"🏗️";
+ if(n.includes("word"))return"🔤";
+ return"🎮";
+}
+function renderCategories(){
+ const bar=document.getElementById("categoryBar");
+ const cats=categories().slice(0,16);
+ bar.innerHTML=`<button class="cat active" data-cat="ทั้งหมด">🔥 ทั้งหมด</button>`+
+  cats.map(([c,n])=>`<button class="cat" data-cat="${esc(c)}">${catIcon(c)} ${esc(c)} <small>${n}</small></button>`).join("");
+ bar.querySelectorAll(".cat").forEach(b=>b.onclick=()=>selectCategory(b.dataset.cat));
+}
+function selectCategory(cat){
+ currentCategory=cat;visible=24;
+ document.querySelectorAll(".cat[data-cat]").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));
+ applyFilters();
+}
+function applyFilters(){
+ const q=norm(document.getElementById("searchInput").value);
+ filtered=allGames.filter(g=>{
+  const catOk=currentCategory==="ทั้งหมด"||g.category===currentCategory;
+  const qOk=!q||norm(`${g.name} ${g.category} ${g.description}`).includes(q);
+  return catOk&&qOk;
+ });
+ document.getElementById("listTitle").textContent=q?`ผลการค้นหา “${document.getElementById("searchInput").value}”`:(currentCategory==="ทั้งหมด"?"เกมแนะนำสำหรับคุณ":currentCategory);
+ document.getElementById("listSubtitle").textContent=`พบ ${filtered.length.toLocaleString()} เกม`;
+ renderGames(true);
+}
+function cardHtml(g,index,compact=false){
+ const emoji=catIcon(g.category);
+ return `<article class="game-card">
+  <div class="thumb" onclick="openPlayer('${esc(g.slug)}')">
+    <div class="thumb-fallback">${emoji}</div>
+    <img loading="lazy" src="${esc(thumbUrl(g))}" alt="${esc(g.name)}" onerror="this.style.display='none'">
+    <span class="play-badge">▶ เล่นเลย</span>
+    <button class="fav" title="เกมโปรด" onclick="event.stopPropagation();toggleFav('${esc(g.slug)}')">${isFav(g.slug)?"♥":"♡"}</button>
+  </div>
+  <div class="game-info">
+    <h3>${esc(g.name)}</h3>
+    <div class="meta"><span>${catIcon(g.category)} ${esc(g.category)}</span><span>HTML5</span></div>
+    ${compact?"":`<button class="play" onclick="openPlayer('${esc(g.slug)}')">เล่นเกม</button>`}
+  </div>
+ </article>`
+}
+function renderGames(reset=false){
+ const grid=document.getElementById("gameGrid");
+ const list=filtered.slice(0,visible);
+ if(!list.length){grid.innerHTML='<div class="empty"><b>ไม่พบเกมที่ค้นหา</b>ลองเปลี่ยนคำค้นหรือเลือกหมวดอื่น</div>';document.getElementById("loadMore").style.display="none";return}
+ grid.innerHTML=list.map(cardHtml).join("");
+ document.getElementById("loadMore").style.display=visible<filtered.length?"block":"none";
+}
+function loadMore(){visible+=24;renderGames()}
+document.getElementById("searchInput").addEventListener("input",()=>{visible=24;applyFilters()});
+
+function toggleFav(slug){
+ let f=favs();
+ f=f.includes(slug)?f.filter(x=>x!==slug):[slug,...f].slice(0,100);
+ saveFavs(f);
+ renderGames();
+ if(currentGame&&currentGame.slug===slug) document.querySelector(".player-top .back:last-child").textContent=isFav(slug)?"♥":"♡";
+}
+function toggleCurrentFav(){if(currentGame)toggleFav(currentGame.slug)}
+function showFavorites(){
+ const f=favs();currentCategory="ทั้งหมด";
+ filtered=f.map(s=>allGames.find(g=>g.slug===s)).filter(Boolean);
+ visible=48;
+ document.getElementById("listTitle").textContent="♥ เกมโปรด";
+ document.getElementById("listSubtitle").textContent=`บันทึกไว้ ${filtered.length} เกมในเบราว์เซอร์นี้`;
+ renderGames();
+ window.scrollTo({top:document.getElementById("gameGrid").offsetTop-130,behavior:"smooth"});
+}
+function showRecent(){
+ const r=recents();filtered=r.map(s=>allGames.find(g=>g.slug===s)).filter(Boolean);visible=48;
+ document.getElementById("listTitle").textContent="🕘 เล่นล่าสุด";
+ document.getElementById("listSubtitle").textContent=`${filtered.length} เกมล่าสุดในเบราว์เซอร์นี้`;
+ renderGames();
+ window.scrollTo({top:document.getElementById("gameGrid").offsetTop-130,behavior:"smooth"});
+}
+function addRecent(slug){
+ let r=recents().filter(x=>x!==slug);r.unshift(slug);localStorage.setItem("gamehub-recents",JSON.stringify(r.slice(0,30)));
+}
+function openPlayer(slug){
+ const g=allGames.find(x=>x.slug===slug);if(!g)return;
+ currentGame=g;addRecent(slug);
+ document.getElementById("playerTopTitle").textContent=g.name;
+ document.getElementById("playerTopCat").textContent=g.category;
+ document.getElementById("detailTitle").textContent=g.name;
+ document.getElementById("detailCategory").textContent=`${catIcon(g.category)} ${g.category}`;
+ document.getElementById("detailDesc").textContent=g.description||"เกม HTML5 เล่นฟรีบนเบราว์เซอร์";
+ const rel=allGames.filter(x=>x.slug!==g.slug&&x.category===g.category).slice(0,12);
+ document.getElementById("relatedGrid").innerHTML=rel.map(x=>cardHtml(x,0,true)).join("");
+ document.getElementById("gameFrame").src="about:blank";
+ document.getElementById("stageLoader").style.display="grid";
+ document.getElementById("playerView").classList.add("show");
+ document.body.style.overflow="hidden";
+ history.replaceState(null,"","#game="+encodeURIComponent(slug));
+}
+function startGame(){
+ if(!currentGame)return;
+ document.getElementById("stageLoader").style.display="none";
+ document.getElementById("gameFrame").src=withTracking(embedUrl(currentGame));
+}
+function closePlayer(){
+ document.getElementById("gameFrame").src="about:blank";
+ document.getElementById("playerView").classList.remove("show");
+ document.body.style.overflow="";
+ currentGame=null;
+ history.replaceState(null,"",location.pathname);
+}
+function handleHash(){
+ const m=location.hash.match(/^#game=(.+)$/);
+ if(m){const slug=decodeURIComponent(m[1]);if(allGames.some(g=>g.slug===slug))openPlayer(slug)}
+}
+function goHome(){closePlayer();filtered=[...allGames];currentCategory="ทั้งหมด";visible=24;document.getElementById("searchInput").value="";renderCategories();renderGames();window.scrollTo({top:0,behavior:"smooth"})}
+function openDlg(id){document.getElementById(id).showModal()}
+window.addEventListener("hashchange",handleHash);
+updateFavCount();loadFeed();
+</script>
+</body></html>
