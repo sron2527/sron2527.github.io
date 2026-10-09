@@ -19,11 +19,29 @@ main{max-width:1180px;margin:auto;padding:12px 12px 70px}.intro{display:flex;jus
 .stage{position:relative;width:100%;aspect-ratio:16/9;max-height:72vh;background:#000;border:1px solid #17362c;border-radius:20px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.35)}
 video,.overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.overlay{pointer-events:none}.night video{filter:grayscale(1) contrast(1.4) brightness(.76) sepia(.2) hue-rotate(80deg) saturate(3)}.scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(57,255,155,.018),rgba(57,255,155,.018) 1px,transparent 1px,transparent 4px);mix-blend-mode:screen}.cross{position:absolute;left:50%;top:50%;width:42px;height:42px;transform:translate(-50%,-50%);border:1px solid rgba(57,255,155,.26);border-radius:50%;pointer-events:none}.cross:before,.cross:after{content:"";position:absolute;background:rgba(57,255,155,.36)}.cross:before{width:60px;height:1px;left:-10px;top:20px}.cross:after{height:60px;width:1px;left:20px;top:-10px}
 .hud{position:absolute;inset:0;pointer-events:none;padding:12px;display:flex;flex-direction:column;justify-content:space-between}.hudtop{display:flex;gap:7px;align-items:flex-start}.tag{background:rgba(0,12,8,.65);border:1px solid rgba(57,255,155,.25);border-radius:8px;padding:6px 8px;font-size:9px;color:#aafbd1}.tag strong{color:var(--neon)}.hudbottom{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}.meter{min-width:180px;background:rgba(0,10,7,.72);border:1px solid rgba(57,255,155,.24);padding:8px;border-radius:10px}.meterline{height:6px;background:#10241c;border-radius:10px;overflow:hidden;margin-top:5px}.meterline i{display:block;height:100%;width:0;background:linear-gradient(90deg,#22d784,#ffd15c,#ff5f6d);transition:.25s}.score{font-size:24px;font-weight:900;color:var(--neon);text-shadow:0 0 18px rgba(57,255,155,.25)}
-.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 50% 45%,#0a1712,#010302 65%);z-index:5}.empty.hide{display:none}.empty .ghost{font-size:64px;filter:drop-shadow(0 0 24px rgba(57,255,155,.2))}.empty h2{margin:6px 0;font-size:22px}.empty p{margin:0 auto 15px;color:#8aa69a;font-size:11px;max-width:360px;line-height:1.6}.start{border:0;border-radius:13px;padding:12px 20px;font-weight:900;color:#00160e;background:linear-gradient(90deg,#2ddf8d,#7affc0);box-shadow:0 0 30px rgba(57,255,155,.15)}
-.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.ctrl{border:1px solid #18352b;border-radius:12px;background:#07100d;color:#dff8ed;padding:10px 8px;font-size:10px;font-weight:800}.ctrl.active{border-color:#36d68a;color:#58ffa9;background:#092117}.ctrl.danger{border-color:#5b2a30;color:#ff9ea8}
+.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 50% 45%,#0a1712,#010302 65%);z-index:5}.empty.hide{display:none}.empty .ghost{font-size:64px;filter:drop-shadow(0 0 24px rgba(57,255,155,.2))}.empty h2{margin:6px 0;font-size:22px}.empty p{margin:0 auto 15px;color:#8aa69a;font-size:11px;max-width:360px;line-height:1.6}.start{border:0;border-radius:18px;padding:17px 28px;min-height:64px;font-size:18px;font-weight:950;color:#00160e;background:linear-gradient(90deg,#2ddf8d,#7affc0);box-shadow:0 0 34px rgba(57,255,155,.20)}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.ctrl{border:1px solid #244c3d;border-radius:16px;background:linear-gradient(180deg,#0b1b16,#06100d);color:#e7fff4;padding:15px 12px;min-height:60px;font-size:15px;font-weight:900;box-shadow:0 8px 20px rgba(0,0,0,.16)}.ctrl.active{border-color:#36d68a;color:#58ffa9;background:#092d20;box-shadow:0 0 24px rgba(57,255,155,.12)}.ctrl.danger{border-color:#5b2a30;color:#ff9ea8}
 .cards{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin-top:10px}.card{background:#07100d;border:1px solid #17342b;border-radius:15px;padding:13px}.card h3{margin:0 0 8px;font-size:13px}.resultTitle{font-size:18px;font-weight:900}.resultText{font-size:11px;color:#b8cbc3;line-height:1.65;margin-top:4px}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.fact{background:#0b1814;border:1px solid #17342b;border-radius:10px;padding:8px}.fact span{display:block;font-size:8.5px;color:#769085}.fact b{display:block;margin-top:2px;font-size:13px}.list{margin:8px 0 0;padding-left:17px;color:#b8cbc3;font-size:10px;line-height:1.7}.note{margin-top:8px;padding:9px;border-radius:10px;background:#14160b;border:1px solid #4f481e;color:#e2d8a4;font-size:9px;line-height:1.55}.adbox{margin-top:12px;min-height:90px;border:1px dashed #264437;border-radius:13px;display:grid;place-items:center;color:#637e72;font-size:9px;text-align:center}.tiny{font-size:9px;color:#6e877d;line-height:1.6}
 #motionCanvas{display:none}
 
+
+
+/* V1.3.4 Overlay Alert */
+.detectAlert{position:absolute;z-index:22;top:54px;left:50%;transform:translateX(-50%);width:min(620px,calc(100% - 28px));padding:12px 15px;border-radius:15px;border:1px solid rgba(57,255,155,.45);background:linear-gradient(180deg,rgba(1,18,12,.92),rgba(4,30,20,.82));box-shadow:0 0 28px rgba(57,255,155,.14);backdrop-filter:blur(9px);pointer-events:none;opacity:.96}
+.detectAlert.idle{opacity:.72}
+.detectAlert.medium{border-color:rgba(255,209,92,.8);box-shadow:0 0 30px rgba(255,209,92,.16)}
+.detectAlert.high{border-color:rgba(255,95,109,.9);box-shadow:0 0 34px rgba(255,95,109,.22);animation:alertPulse 1s ease-in-out infinite}
+.detectLabel{font-size:9px;letter-spacing:1px;color:#91b7a6;font-weight:900}
+.detectMain{font-size:21px;line-height:1.25;font-weight:950;color:#f5fff9;text-shadow:0 0 14px rgba(57,255,155,.25);margin-top:3px}
+.detectMeta{display:flex;flex-wrap:wrap;gap:6px 11px;margin-top:6px;color:#b9d5c8;font-size:10px}
+.detectMeta b{color:#fff}
+.ageChip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:999px;background:rgba(57,255,155,.09);border:1px solid rgba(57,255,155,.17)}
+.stage.alertHigh{animation:stageAlarm .9s ease-in-out 3}
+.ageResult{margin-top:9px;padding:9px 10px;border:1px solid #254438;border-radius:10px;background:#091712;color:#bcd5c9;font-size:10px;line-height:1.6}
+.ageResult b{color:#eafff4}
+@keyframes alertPulse{0%,100%{transform:translateX(-50%) scale(1);background:rgba(28,8,9,.88)}50%{transform:translateX(-50%) scale(1.012);background:rgba(54,8,13,.91)}}
+@keyframes stageAlarm{0%,100%{box-shadow:0 0 0 1px rgba(57,255,155,.13),0 0 42px rgba(57,255,155,.09),0 24px 72px rgba(0,0,0,.58)}50%{box-shadow:0 0 0 2px rgba(255,95,109,.65),0 0 48px rgba(255,40,70,.28),0 24px 72px rgba(0,0,0,.58)}}
+@media(max-width:760px){.detectAlert{top:48px;width:calc(100% - 18px);padding:10px 11px}.detectMain{font-size:17px}.detectMeta{font-size:9px}.controls{grid-template-columns:1fr 1fr;gap:10px}.ctrl{min-height:62px;font-size:15px;padding:14px 8px}.start{font-size:18px;min-height:66px;padding:16px 22px}}
 
 /* V1.3.3 Ghost Radar */
 .radarBox{position:absolute;left:12px;bottom:58px;width:150px;height:150px;z-index:12;border-radius:50%;overflow:hidden;pointer-events:none;background:
@@ -100,7 +118,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
 </div>
 <header><div class="nav"><div class="logo">👻</div><div class="brand"><b>GHOST CAM AI</b><small>Live anomaly scanner • Entertainment</small></div><div id="livePill" class="livepill">● CAMERA OFF</div></div></header>
 <main>
- <div class="intro"><div><h1>V1.3.3 กล้องส่องผี AI</h1><p>ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.3 LIVE</span></div>
+ <div class="intro"><div><h1>V1.3.4 กล้องส่องผี AI</h1><p>ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.4 LIVE</span></div>
  <section id="stage" class="stage">
   <video id="video" autoplay muted playsinline></video>
   <canvas id="overlay" class="overlay"></canvas>
@@ -108,6 +126,16 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
   <div class="hud">
    <div class="hudtop"><div class="tag">POSE <strong id="poseState">WAIT</strong></div><div class="tag">MOTION <strong id="motionText">0%</strong></div><div class="tag">AI <strong id="aiState">IDLE</strong></div></div>
    <div class="hudbottom"><div class="meter"><div style="font-size:9px;color:#9cb3a9">ANOMALY METER</div><div class="meterline"><i id="meterBar"></i></div></div><div class="score"><span id="score">0</span>%</div></div>
+  </div>
+  <div id="detectAlert" class="detectAlert idle">
+   <div class="detectLabel">LIVE DETECTION</div>
+   <div id="detectMain" class="detectMain">กำลังรอการสแกน...</div>
+   <div class="detectMeta">
+    <span>โครงร่าง <b id="overlayPose">0</b></span>
+    <span>ANOMALY <b id="overlayScore">0%</b></span>
+    <span class="ageChip">อายุที่ AI คาด <b id="overlayAge">—</b></span>
+    <span>ยุค/ลักษณะ <b id="overlayEra">—</b></span>
+   </div>
   </div>
   <div class="radarBox" aria-hidden="true">
    <div class="radarCore"></div>
@@ -132,7 +160,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
    <h3>🔎 ผลวิเคราะห์ล่าสุด</h3>
    <div id="resultTitle" class="resultTitle">รอเริ่มสแกน</div>
    <div id="resultText" class="resultText">เปิดกล้องก่อน แล้วกด “เริ่ม AI SCAN” ระบบจะวิเคราะห์เฟรมจากกล้องสดประมาณทุก 10 วินาที</div>
-   <div class="facts"><div class="fact"><span>รูปร่างคล้ายคน</span><b id="humanLike">—</b></div><div class="fact"><span>ตำแหน่ง</span><b id="zone">—</b></div><div class="fact"><span>AI มั่นใจ</span><b id="confidence">—</b></div></div>
+   <div class="facts"><div class="fact"><span>รูปร่างคล้ายคน</span><b id="humanLike">—</b></div><div class="fact"><span>ตำแหน่ง</span><b id="zone">—</b></div><div class="fact"><span>AI มั่นใจ</span><b id="confidence">—</b></div></div>\n   <div class="ageResult">👤 อายุที่ AI คาดจากลักษณะที่มองเห็น: <b id="ageDetail">—</b> · ลักษณะยุค: <b id="eraDetail">—</b><br><small>เป็นการประมาณจากภาพเพื่อความบันเทิง ไม่ใช่อายุของวิญญาณ</small></div>
    <ul id="observations" class="list"></ul>
    <div class="note">⚠️ ระบบตรวจจับได้เฉพาะรูปแบบจากภาพ เช่น คน เงา แสงสะท้อน และการเคลื่อนไหว ไม่สามารถพิสูจน์การมีอยู่ของผีหรือสิ่งเหนือธรรมชาติได้</div>
   </section>
@@ -150,10 +178,21 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
 const API="https://nganchai-api.vercel.app/api/ghostcam";
 const video=document.getElementById("video"),overlay=document.getElementById("overlay"),ctx=overlay.getContext("2d");
 const motionCanvas=document.getElementById("motionCanvas"),mctx=motionCanvas.getContext("2d",{willReadFrequently:true});
-let stream=null,facing="environment",cameraOn=false,aiScanning=false,aiBusy=false,scanTimer=null,pose=null,poseBusy=false,lastPoseCount=0,motion=0,lastPixels=null,scanCount=0,rafId=0,aiScanScore=0;
+let stream=null,facing="environment",cameraOn=false,aiScanning=false,aiBusy=false,scanTimer=null,pose=null,poseBusy=false,lastPoseCount=0,motion=0,lastPixels=null,scanCount=0,rafId=0,aiScanScore=0,lastAiResultAt=0;
 
 function $(id){return document.getElementById(id)}
 function setText(id,v){$(id).textContent=v}
+
+function updateOverlay(main,score=0,age="—",era="—",level="idle"){
+ const box=$("detectAlert");box.className="detectAlert "+level;
+ setText("detectMain",main||"กำลังสแกน...");
+ setText("overlayPose",lastPoseCount);
+ setText("overlayScore",Math.round(score||0)+"%");
+ setText("overlayAge",age||"ระบุไม่ได้");
+ setText("overlayEra",era||"ระบุไม่ได้");
+ if(level==="high"){$("stage").classList.remove("alertHigh");void $("stage").offsetWidth;$("stage").classList.add("alertHigh")}
+}
+
 function resizeOverlay(){const r=video.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,2);overlay.width=Math.max(1,Math.round(r.width*dpr));overlay.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
 window.addEventListener("resize",resizeOverlay);
 
@@ -166,8 +205,8 @@ async function initPose(){
 
 function drawPose(results){
  const w=overlay.clientWidth,h=overlay.clientHeight;ctx.clearRect(0,0,w,h);
- const lm=results.poseLandmarks;lastPoseCount=lm?1:0;setText("poseCount",lastPoseCount);setText("poseState",lm?"LOCK":"SCAN");
- if(!lm)return;if(Math.random()<.16)addRadarBlip("medium");
+ const lm=results.poseLandmarks;lastPoseCount=lm?1:0;setText("poseCount",lastPoseCount);setText("poseState",lm?"LOCK":"SCAN");setText("overlayPose",lastPoseCount);
+ if(!lm)return;if(Date.now()-lastAiResultAt>5000)updateOverlay("ตรวจพบโครงร่างคล้ายบุคคล • รอ AI วิเคราะห์",Math.max(aiScanScore,20),"—","กำลังตรวจสอบ","medium");if(Math.random()<.16)addRadarBlip("medium");
  try{
   drawConnectors(ctx,lm,POSE_CONNECTIONS,{color:"#39ff9b",lineWidth:3});
   drawLandmarks(ctx,lm,{color:"#d6ffe9",fillColor:"#39ff9b",lineWidth:1,radius:3});
@@ -198,7 +237,7 @@ async function startCamera(){
  try{
   if(stream)stream.getTracks().forEach(t=>t.stop());
   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:720}},audio:false});
-  video.srcObject=stream;await video.play();cameraOn=true;$("empty").classList.add("hide");$("livePill").classList.add("on");setText("livePill","● LIVE CAMERA");resizeOverlay();await initPose();poseLoop();motionLoop();
+  video.srcObject=stream;await video.play();cameraOn=true;$("empty").classList.add("hide");$("livePill").classList.add("on");setText("livePill","● LIVE CAMERA");updateOverlay("กล้องพร้อม • กดเริ่ม AI SCAN",0,"—","—","idle");resizeOverlay();await initPose();poseLoop();motionLoop();
  }catch(e){alert("เปิดกล้องไม่ได้ กรุณาอนุญาตสิทธิ์กล้องให้เว็บไซต์ แล้วลองใหม่อีกครั้ง")}
 }
 
@@ -218,13 +257,13 @@ function grabFrame(){
 }
 
 async function analyzeFrame(){
- if(!cameraOn||aiBusy)return;aiBusy=true;setText("aiState","SCANNING");
+ if(!cameraOn||aiBusy)return;aiBusy=true;setText("aiState","SCANNING");updateOverlay("AI กำลังวิเคราะห์ภาพสด...",aiScanScore,"กำลังประเมิน","กำลังประเมิน","medium");
  try{
   const res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({frame:grabFrame(),motion,poseCount:lastPoseCount})});
   const d=await res.json().catch(()=>({}));if(!res.ok)throw new Error((d.error||"AI วิเคราะห์ไม่ได้")+(d.code?" ("+d.code+")":""));
-  aiScanScore=Math.round(d.anomalyScore||0);scanCount++;setText("scanCount",scanCount);setText("score",aiScanScore);$("meterBar").style.width=aiScanScore+"%";addRadarBlip(aiScanScore>=70?"high":aiScanScore>=40?"medium":"low");setText("radarText",aiScanScore>=70?"HIGH SIGNAL":aiScanScore>=40?"SIGNAL FOUND":"RADAR ACTIVE");
+  aiScanScore=Math.round(d.anomalyScore||0);scanCount++;setText("scanCount",scanCount);setText("score",aiScanScore);$("meterBar").style.width=aiScanScore+"%";addRadarBlip(aiScanScore>=70?"high":aiScanScore>=40?"medium":"low");setText("radarText",aiScanScore>=70?"HIGH SIGNAL":aiScanScore>=40?"SIGNAL FOUND":"RADAR ACTIVE");lastAiResultAt=Date.now();const level=aiScanScore>=70?"high":aiScanScore>=40?"medium":"idle";const headline=d.humanLike?"ตรวจพบรูปร่างคล้ายบุคคล"+(d.zone?" • "+d.zone:""):(aiScanScore>=40?"ตรวจพบความผิดปกติทางภาพ":"ยังไม่พบรูปร่างผิดปกติชัดเจน");updateOverlay(headline,aiScanScore,d.apparentAge||"ระบุไม่ได้",d.eraImpression||"ระบุไม่ได้",level);
   setText("resultTitle",d.humanLike?"ตรวจพบรูปร่างคล้ายบุคคล":"ยังไม่พบรูปร่างบุคคลชัดเจน");setText("resultText",d.summary||"—");
-  setText("humanLike",d.humanLike?"พบ":"ไม่ชัด");setText("zone",d.zone||"—");setText("confidence",Math.round(d.confidence||0)+"%");
+  setText("humanLike",d.humanLike?"พบ":"ไม่ชัด");setText("zone",d.zone||"—");setText("confidence",Math.round(d.confidence||0)+"%");setText("ageDetail",(d.apparentAge||"ระบุไม่ได้")+(d.ageConfidence?" (มั่นใจ "+Math.round(d.ageConfidence)+"%)":""));setText("eraDetail",d.eraImpression||"ระบุไม่ได้");
   const obs=[...(d.observations||[]),...(d.possibleCauses||[]).map(x=>"สาเหตุที่เป็นไปได้: "+x)];$("observations").innerHTML=obs.map(x=>"<li>"+escapeHtml(x)+"</li>").join("");
  }catch(e){setText("resultTitle","AI Scan ไม่สำเร็จ");setText("resultText",e.message||"กรุณาลองใหม่");}
  finally{aiBusy=false;setText("aiState",aiScanning?"ACTIVE":"IDLE")}
@@ -234,7 +273,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":
 function toggleScan(){
  if(!cameraOn){alert("กรุณาเปิดกล้องก่อนครับ");return}
  aiScanning=!aiScanning;$("scanBtn").classList.toggle("active",aiScanning);$("scanBtn").textContent=aiScanning?"🟢 AI SCAN ทำงาน":"🤖 เริ่ม AI SCAN";setText("aiState",aiScanning?"ACTIVE":"IDLE");
- clearInterval(scanTimer);if(aiScanning){analyzeFrame();scanTimer=setInterval(analyzeFrame,10000)}
+ clearInterval(scanTimer);if(aiScanning){updateOverlay("เริ่มสแกน • กำลังอ่านภาพสด",aiScanScore,"—","—","medium");analyzeFrame();scanTimer=setInterval(analyzeFrame,10000)}else{updateOverlay("หยุด AI SCAN แล้ว",aiScanScore,$("overlayAge").textContent,$("overlayEra").textContent,"idle")}
 }
 function toggleNight(){$("stage").classList.toggle("night");$("nightBtn").classList.toggle("active");}
 function capture(){
