@@ -32,7 +32,7 @@ dialog{border:0;border-radius:18px;max-width:680px;width:calc(100% - 28px);paddi
 <body>
 <header><div class="nav"><div class="logo">🔎</div><div class="brand"><b>เช็คของไทย AI</b><small>พระเครื่อง • ของเก่า • ของสะสม</small></div><button class="privacy" onclick="privacyDlg.showModal()">🔒 ไม่เก็บรูปถาวร</button></div></header>
 <main class="wrap">
- <section class="hero"><h1>ถ่ายรูป แล้วให้ AI<br><span>ช่วยค้นว่าเป็นอะไร</span></h1><p>ใช้กล้องมือถือถ่ายด้านหน้าและด้านหลัง ระบบช่วยวิเคราะห์ลักษณะ ค้นข้อมูลอ้างอิง และสรุปช่วงราคาที่พบในตลาดออนไลน์</p><div class="badges"><span>📷 ถ่ายจากมือถือ</span><span>🤖 วิเคราะห์ด้วย AI</span><span>🌐 ค้นข้อมูลอ้างอิง</span><span>💰 ประเมินเป็นช่วงราคา</span></div></section>
+ <section class="hero"><h1>ถ่ายรูป แล้วให้ AI<br><span>ช่วยค้นว่าเป็นอะไร</span></h1><p>ใช้กล้องมือถือถ่ายด้านหน้าและด้านหลัง ระบบช่วยวิเคราะห์ลักษณะ ค้นข้อมูลอ้างอิง และสรุปช่วงราคาที่พบในตลาดออนไลน์</p><div class="badges"><span>🆕 V1.2</span><span>📷 ถ่ายจากมือถือ</span><span>🤖 วิเคราะห์ด้วย AI</span><span>🔎 เทียบข้อมูลบนเว็บ</span><span>💰 ประเมินเป็นช่วงราคา</span></div></section>
  <div class="adbox"><div><b>พื้นที่โฆษณา Google AdSense</b>พร้อมใส่ Ad Unit หลังสร้างหน่วยโฆษณาสำหรับเช็คของไทย</div></div>
 
  <h2 class="mode-title">เลือกสิ่งที่ต้องการเช็ค</h2>
@@ -46,11 +46,14 @@ dialog{border:0;border-radius:18px;max-width:680px;width:calc(100% - 28px);paddi
   <div class="photos">
    <div class="photo"><div class="preview" id="previewFront"><div class="placeholder"><i>📿</i><b>ด้านหน้า</b><small>ถ่ายให้เห็นเต็มชิ้น</small></div></div><div class="photo-actions"><button class="cam" onclick="frontCam.click()">📷 เปิดกล้อง</button><button class="gallery" onclick="frontFile.click()">🖼️ เลือกรูป</button></div></div>
    <div class="photo"><div class="preview" id="previewBack"><div class="placeholder"><i>🔄</i><b>ด้านหลัง</b><small>แนะนำให้ถ่ายเพิ่ม</small></div></div><div class="photo-actions"><button class="cam" onclick="backCam.click()">📷 เปิดกล้อง</button><button class="gallery" onclick="backFile.click()">🖼️ เลือกรูป</button></div></div>
+   <div class="photo"><div class="preview" id="previewDetail"><div class="placeholder"><i>🔬</i><b>ภาพรายละเอียด</b><small>ซูมตัวหนังสือ ตรา ขอบ หรือจุดสำคัญ</small></div></div><div class="photo-actions"><button class="cam" onclick="detailCam.click()">📷 เปิดกล้อง</button><button class="gallery" onclick="detailFile.click()">🖼️ เลือกรูป</button></div></div>
   </div>
   <input id="frontCam" type="file" accept="image/*" capture="environment" hidden>
   <input id="backCam" type="file" accept="image/*" capture="environment" hidden>
   <input id="frontFile" type="file" accept="image/*" hidden>
   <input id="backFile" type="file" accept="image/*" hidden>
+  <input id="detailCam" type="file" accept="image/*" capture="environment" hidden>
+  <input id="detailFile" type="file" accept="image/*" hidden>
   <div class="note"><label>ข้อมูลเพิ่มเติม (ถ้ามี)</label><textarea id="note" placeholder="เช่น ขนาดประมาณ 3 ซม., มีตัวหนังสือด้านหลัง, ได้มาจากบ้านเก่า จ.อยุธยา..."></textarea></div>
   <button id="analyzeBtn" class="analyze" onclick="analyze()">✨ วิเคราะห์และค้นข้อมูล</button>
   <div id="status" class="status"><span class="spin"></span><span id="statusText">กำลังวิเคราะห์ภาพ...</span></div>
@@ -62,6 +65,10 @@ dialog{border:0;border-radius:18px;max-width:680px;width:calc(100% - 28px);paddi
    <div class="result-body">
     <div class="grid"><div class="kv"><span>ประเภท / รุ่น</span><b id="rType">—</b></div><div class="kv"><span>วัด / ผู้สร้าง / แหล่งที่มา</span><b id="rOrigin">—</b></div><div class="kv"><span>ช่วงปี / ยุค</span><b id="rEra">—</b></div><div class="kv"><span>วัสดุ / เนื้อ</span><b id="rMaterial">—</b></div></div>
     <div class="section"><h3>🔍 จุดสังเกตจากภาพ</h3><p id="rFeatures">—</p></div>
+    <div class="section" id="inscriptionSection" style="display:none"><h3>🔤 ตัวอักษร / ตัวเลขที่อ่านได้</h3><p id="rInscriptions">—</p></div>
+    <div class="section" id="alternativeSection" style="display:none"><h3>🧭 ตัวเลือกที่ใกล้เคียง</h3><div id="rAlternatives" class="sources"></div></div>
+    <div class="section" id="adviceSection" style="display:none"><h3>📸 ถ่ายอะไรเพิ่มเพื่อให้แม่นขึ้น</h3><p id="rPhotoAdvice">—</p></div>
+    <div class="section"><h3>🧠 วิธีตรวจสอบ V1.2</h3><p id="rEngine">AI วิเคราะห์ภาพ + Google Search ตรวจสอบข้อมูล</p></div>
     <div class="section"><h3>💰 ช่วงราคาที่พบ</h3><div class="price"><b id="rPrice">ยังประเมินไม่ได้</b><small id="rPriceNote">ราคาเป็นข้อมูลอ้างอิงจากตลาดออนไลน์ ไม่ใช่ราคาซื้อขายรับประกัน</small></div></div>
     <div class="section"><h3>🌐 แหล่งข้อมูลอ้างอิง</h3><div id="rSources" class="sources"><p>ยังไม่มีแหล่งอ้างอิง</p></div></div>
     <div class="warn"><b>⚠️ สำคัญ:</b> ระบบนี้ช่วยคัดกรองจากภาพและข้อมูลออนไลน์เท่านั้น ไม่ใช่ใบรับรองพระแท้/ของแท้ และไม่ควรใช้เป็นเหตุผลเดียวในการซื้อขายสินค้ามูลค่าสูง ควรตรวจของจริงกับผู้เชี่ยวชาญอีกครั้ง</div>
@@ -75,20 +82,34 @@ dialog{border:0;border-radius:18px;max-width:680px;width:calc(100% - 28px);paddi
 </main>
 <footer><div class="foot"><b>เช็คของไทย AI</b><br>เครื่องมือช่วยค้นและระบุจากภาพ ไม่ใช่บริการรับรองความแท้หรือประเมินราคาทางวิชาชีพ</div></footer>
 
-<dialog id="privacyDlg"><div class="dlg"><button class="close" onclick="privacyDlg.close()">×</button><h2>ความเป็นส่วนตัว</h2><p>V1 ออกแบบให้ส่งภาพไปวิเคราะห์แบบคำขอครั้งเดียวและไม่สร้างคลังรูปผู้ใช้บนเว็บไซต์ รูปไม่ได้ถูกบันทึกลง GitHub หรือฐานข้อมูลของเช็คของไทย AI</p><p>การวิเคราะห์ใช้ผู้ให้บริการ AI ภายนอก จึงอยู่ภายใต้นโยบายการประมวลผลของผู้ให้บริการนั้นด้วย กรุณาอย่าถ่ายเอกสารส่วนตัว บุคคล หรือข้อมูลที่ไม่เกี่ยวข้องติดเข้ามาในภาพ</p></div></dialog>
+<dialog id="privacyDlg"><div class="dlg"><button class="close" onclick="privacyDlg.close()">×</button><h2>ความเป็นส่วนตัว</h2><p>V1.2 ออกแบบให้ส่งภาพไปวิเคราะห์แบบคำขอครั้งเดียวและไม่สร้างคลังรูปผู้ใช้บนเว็บไซต์ รูปไม่ได้ถูกบันทึกลง GitHub หรือฐานข้อมูลของเช็คของไทย AI</p><p>การวิเคราะห์ใช้ผู้ให้บริการ AI ภายนอก จึงอยู่ภายใต้นโยบายการประมวลผลของผู้ให้บริการนั้นด้วย กรุณาอย่าถ่ายเอกสารส่วนตัว บุคคล หรือข้อมูลที่ไม่เกี่ยวข้องติดเข้ามาในภาพ</p></div></dialog>
 <script>
 const API="https://nganchai-api.vercel.app/api/checkthai";
-let mode="amulet",frontData="",backData="";
+let mode="amulet",frontData="",backData="",detailData="";
 const $=id=>document.getElementById(id);
 function setMode(m){mode=m;document.querySelectorAll(".mode").forEach(x=>x.classList.toggle("active",x.dataset.mode===m));$("panelTitle").textContent=m==="amulet"?"ถ่ายพระเครื่อง":"ถ่ายของเก่า / ของสะสม";$("note").placeholder=m==="amulet"?"เช่น ขนาดประมาณ 3 ซม., มีตัวหนังสือด้านหลัง, ทราบชื่อวัดหรือที่มา...":"เช่น ขนาด น้ำหนัก ยี่ห้อ ตัวเลข/ตราประทับ ประเทศที่ได้มา..."}
 async function compress(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{let w=img.width,h=img.height,max=1280;if(w>max||h>max){const r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r)}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);URL.revokeObjectURL(url);resolve(c.toDataURL("image/jpeg",.82))};img.onerror=reject;img.src=url})}
-async function handleFile(file,side){if(!file)return;try{const data=await compress(file);if(side==="front")frontData=data;else backData=data;const p=$(side==="front"?"previewFront":"previewBack");p.innerHTML=`<img src="${data}" alt="${side==="front"?"ด้านหน้า":"ด้านหลัง"}">`}catch{alert("เปิดรูปไม่สำเร็จ กรุณาลองรูปอื่น")}}
+async function handleFile(file,side){if(!file)return;try{const data=await compress(file);if(side==="front")frontData=data;else if(side==="back")backData=data;else detailData=data;const map={front:["previewFront","ด้านหน้า"],back:["previewBack","ด้านหลัง"],detail:["previewDetail","ภาพรายละเอียด"]};const [pid,alt]=map[side];$(pid).innerHTML=`<img src="${data}" alt="${alt}">`}catch{alert("เปิดรูปไม่สำเร็จ กรุณาลองรูปอื่น")}}
 ["frontCam","frontFile"].forEach(id=>$(id).addEventListener("change",e=>handleFile(e.target.files[0],"front")));
 ["backCam","backFile"].forEach(id=>$(id).addEventListener("change",e=>handleFile(e.target.files[0],"back")));
+["detailCam","detailFile"].forEach(id=>$(id).addEventListener("change",e=>handleFile(e.target.files[0],"detail")));
 function status(text){$("statusText").textContent=text;$("status").classList.add("show")}
 function safe(v,f="—"){return v==null||v===""?f:String(v)}
 function sourcesHtml(src){if(!Array.isArray(src)||!src.length)return"<p>AI ยังไม่พบแหล่งอ้างอิงที่ชัดเจน ควรค้นเพิ่มเติมก่อนซื้อขาย</p>";return src.slice(0,8).map(s=>{let u="#";try{u=new URL(s.url).href}catch{}return `<a class="source" href="${u}" target="_blank" rel="noopener"><span>🔗</span><span><b>${safe(s.title,"แหล่งข้อมูล")}</b><small>${safe(s.domain,safe(s.url,""))}</small></span></a>`}).join("")}
-function render(r){$("confidence").textContent=`ความมั่นใจในการระบุ ${Math.round(Number(r.confidence)||0)}%`;$("resultName").textContent=safe(r.name,"ยังระบุไม่ได้ชัดเจน");$("resultSummary").textContent=safe(r.summary,"ควรถ่ายภาพเพิ่มเติมเพื่อช่วยการระบุ");$("rType").textContent=safe(r.type);$("rOrigin").textContent=safe(r.origin);$("rEra").textContent=safe(r.era);$("rMaterial").textContent=safe(r.material);$("rFeatures").textContent=Array.isArray(r.features)?r.features.join(" • "):safe(r.features);$("rPrice").textContent=safe(r.priceRange,"ยังประเมินไม่ได้");$("rPriceNote").textContent=safe(r.priceNote,"ช่วงราคาจากข้อมูลออนไลน์อาจแตกต่างตามสภาพ ความแท้ ความนิยม และช่วงเวลา");$("rSources").innerHTML=sourcesHtml(r.sources);$("result").classList.add("show");$("result").scrollIntoView({behavior:"smooth",block:"start"})}
-async function analyze(){if(!frontData){alert("กรุณาถ่ายหรือเลือกรูปด้านหน้าก่อนครับ");return}const btn=$("analyzeBtn");btn.disabled=true;status("กำลังดูรายละเอียดจากภาพ...");$("result").classList.remove("show");try{const timer=setTimeout(()=>status("กำลังค้นข้อมูลและช่วงราคาที่เกี่ยวข้อง..."),3500);const res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode,note:$("note").value.trim(),front:frontData,back:backData})});clearTimeout(timer);const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error((data.error||"ระบบวิเคราะห์ยังไม่พร้อม")+(data.code?"\nรหัส: "+data.code:""));render(data)}catch(e){alert(e.message||"ระบบวิเคราะห์ไม่พร้อมชั่วคราว กรุณาลองใหม่อีกครั้งภายหลัง")}finally{btn.disabled=false;$("status").classList.remove("show")}}
+function alternativesHtml(v){if(!Array.isArray(v)||!v.length)return"";return v.map((x,i)=>`<div class="source"><span>${i+1}.</span><span><b>${safe(x.name)}</b><small>${safe(x.reason,"ยังต้องเทียบรายละเอียดเพิ่ม")} • ความใกล้เคียง ${Math.round(Number(x.confidence)||0)}%</small></span></div>`).join("")}
+function render(r){
+ $("confidence").textContent=`ความมั่นใจในการระบุ ${Math.round(Number(r.confidence)||0)}%`;
+ $("resultName").textContent=safe(r.name,"ยังระบุไม่ได้ชัดเจน");$("resultSummary").textContent=safe(r.summary,"ควรถ่ายภาพเพิ่มเติมเพื่อช่วยการระบุ");
+ $("rType").textContent=safe(r.type);$("rOrigin").textContent=safe(r.origin);$("rEra").textContent=safe(r.era);$("rMaterial").textContent=safe(r.material);
+ $("rFeatures").textContent=Array.isArray(r.features)&&r.features.length?r.features.join(" • "):safe(r.features);
+ const ins=Array.isArray(r.inscriptions)?r.inscriptions:[];$("inscriptionSection").style.display=ins.length?"block":"none";$("rInscriptions").textContent=ins.join(" • ");
+ const alt=Array.isArray(r.alternatives)?r.alternatives:[];$("alternativeSection").style.display=alt.length?"block":"none";$("rAlternatives").innerHTML=alternativesHtml(alt);
+ const advice=Array.isArray(r.photoAdvice)?r.photoAdvice:[];$("adviceSection").style.display=advice.length?"block":"none";$("rPhotoAdvice").textContent=advice.join(" • ");
+ $("rPrice").textContent=safe(r.priceRange,"ยังประเมินไม่ได้");$("rPriceNote").textContent=safe(r.priceNote,"ช่วงราคาจากข้อมูลออนไลน์อาจแตกต่างตามสภาพ ความแท้ ความนิยม และช่วงเวลา");
+ $("rSources").innerHTML=sourcesHtml(r.sources);
+ $("rEngine").textContent=r.visionUsed?"V1.2: Google Vision Web Detection + AI วิเคราะห์ภาพ + Google Search ตรวจสอบข้อมูล":"V1.2: AI วิเคราะห์ภาพ + Google Search ตรวจสอบข้อมูล (Google Vision ยังไม่เปิดใช้งาน)";
+ $("result").classList.add("show");$("result").scrollIntoView({behavior:"smooth",block:"start"})
+}
+async function analyze(){if(!frontData){alert("กรุณาถ่ายหรือเลือกรูปด้านหน้าก่อนครับ");return}const btn=$("analyzeBtn");btn.disabled=true;status("กำลังดูรายละเอียดจากภาพ...");$("result").classList.remove("show");try{const timer=setTimeout(()=>status("กำลังเทียบข้อมูลบนเว็บและตรวจสอบชื่อ/รุ่น/ราคา..."),3500);const res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode,note:$("note").value.trim(),front:frontData,back:backData,detail:detailData})});clearTimeout(timer);const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error((data.error||"ระบบวิเคราะห์ยังไม่พร้อม")+(data.code?"\nรหัส: "+data.code:""));render(data)}catch(e){alert(e.message||"ระบบวิเคราะห์ไม่พร้อมชั่วคราว กรุณาลองใหม่อีกครั้งภายหลัง")}finally{btn.disabled=false;$("status").classList.remove("show")}}
 </script>
 </body></html>
