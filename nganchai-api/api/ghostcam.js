@@ -7,7 +7,7 @@ function textOf(d){return (d?.candidates?.[0]?.content?.parts||[]).map(p=>p.text
 async function gemini(parts){const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;if(!key)throw new Error("NOT_CONFIGURED");const models=[process.env.GEMINI_MODEL,"gemini-2.5-flash","gemini-2.0-flash"].filter((x,i,a)=>x&&a.indexOf(x)===i);let last;for(const model of models){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),18000);try{const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:.12,responseMimeType:"application/json"}}),signal:ctrl.signal});if(r.ok)return await r.json();const body=await r.text();last=new Error("Gemini "+r.status+" "+model+" "+body.slice(0,300));if(![404,429,500,502,503,504].includes(r.status))throw last}catch(e){last=e}finally{clearTimeout(timer)}}throw last||new Error("AI_FAILED")}
 export default async function handler(req,res){
  cors(req,res);res.setHeader("Cache-Control","no-store");if(req.method==="OPTIONS")return res.status(204).end();
- if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.6"});
+ if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.8"});
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
   if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:req.body?.lang==="en"?"AI is not ready yet":"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
@@ -23,13 +23,16 @@ export default async function handler(req,res){
    lang==="en"?"If a visible person has enough facial/body detail, estimate apparentAge as a range such as 15-25 years. Never give an exact age":"ถ้ามีบุคคลที่เห็นใบหน้า/สรีระพอสมควร ให้ประมาณ apparentAge เป็นช่วงอายุที่มองเห็น เช่น 15-25 ปี เท่านั้น ห้ามระบุอายุแน่นอน",
    lang==="en"?"If only a shadow or unclear outline is visible, set apparentAge to Unable to estimate":"ถ้าเป็นเพียงเงา โครงร่าง หรือมองไม่เห็นใบหน้าชัด ให้ apparentAge เป็น ระบุไม่ได้",
    lang==="en"?"eraImpression is only a visual impression from clothes, image color and scene, e.g. contemporary, vintage-looking, unable to determine. Never claim it is the age of a spirit":"eraImpression เป็นเพียงความรู้สึกจากเสื้อผ้า สีภาพ และฉาก เช่น ร่วมสมัย, ดูย้อนยุค, ระบุไม่ได้ ห้ามอ้างว่าเป็นอายุของวิญญาณ",
+   lang==="en"?"appearancePresentation must describe only visible presentation, using one of: masculine-presenting, feminine-presenting, or unable to determine. Do not claim gender identity or biological sex":"appearancePresentation ให้บรรยายเฉพาะลักษณะที่มองเห็น โดยใช้ ดูคล้ายผู้ชาย, ดูคล้ายผู้หญิง หรือ ระบุไม่ได้ เท่านั้น ห้ามฟันธงอัตลักษณ์ทางเพศหรือเพศกำเนิด",
+   lang==="en"?"appearanceConfidence is confidence 0-100 in that visible presentation estimate":"appearanceConfidence คือความมั่นใจ 0-100 ของการประเมินลักษณะที่มองเห็น",
    lang==="en"?"anomalyScore is a 0-100 visual-anomaly score, not a ghost probability":"anomalyScore เป็นคะแนนความผิดปกติทางภาพ 0-100 ไม่ใช่คะแนนว่ามีผี",
    lang==="en"?"Return JSON only. All natural-language string values MUST be English":"ตอบ JSON เท่านั้น และค่าข้อความธรรมชาติทั้งหมดต้องเป็นภาษาไทย",
-   lang==="en"?'{"summary":"short English description","anomalyScore":0,"humanLike":false,"people":0,"zone":"approximate position","observations":["visible observation"],"possibleCauses":["ordinary possible cause"],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine"}':'{"summary":"คำอธิบายภาษาไทยสั้นๆ","anomalyScore":0,"humanLike":false,"people":0,"zone":"ตำแหน่งโดยประมาณ","observations":["สิ่งที่เห็น"],"possibleCauses":["สาเหตุธรรมดาที่เป็นไปได้"],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้"}'
+   lang==="en"?'{"summary":"short English description","anomalyScore":0,"humanLike":false,"people":0,"zone":"approximate position","observations":["visible observation"],"possibleCauses":["ordinary possible cause"],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine","appearancePresentation":"unable to determine","appearanceConfidence":0}':'{"summary":"คำอธิบายภาษาไทยสั้นๆ","anomalyScore":0,"humanLike":false,"people":0,"zone":"ตำแหน่งโดยประมาณ","observations":["สิ่งที่เห็น"],"possibleCauses":["สาเหตุธรรมดาที่เป็นไปได้"],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้","appearancePresentation":"ระบุไม่ได้","appearanceConfidence":0}'
   ].join("\n");
   const d=await gemini([{text:prompt},frame]);const x=parseJson(textOf(d));
   const apparentAge=clean(x.apparentAge,80)||(lang==="en"?"Unable to estimate":"ระบุไม่ได้");
   const eraImpression=clean(x.eraImpression,100)||(lang==="en"?"Unable to determine":"ระบุไม่ได้");
+  const appearancePresentation=clean(x.appearancePresentation,80)||(lang==="en"?"unable to determine":"ระบุไม่ได้");
   return res.status(200).json({
    ok:true,
    summary:clean(x.summary,500)||(lang==="en"?"No clear anomaly detected":"ยังไม่พบสิ่งผิดปกติชัดเจน"),
@@ -43,7 +46,9 @@ export default async function handler(req,res){
    apparentAge,
    ageConfidence:Math.max(0,Math.min(100,Number(x.ageConfidence)||0)),
    eraImpression,
-   disclaimer:lang==="en"?"Age is only an estimate from visible appearance for entertainment and does not confirm anything supernatural":"อายุเป็นเพียงการประมาณจากลักษณะที่มองเห็นในภาพเพื่อความบันเทิง และไม่ใช่การยืนยันสิ่งเหนือธรรมชาติ"
+   appearancePresentation,
+   appearanceConfidence:Math.max(0,Math.min(100,Number(x.appearanceConfidence)||0)),
+   disclaimer:lang==="en"?"Age and appearance are estimates from visible presentation for entertainment only. They do not establish gender identity, biological sex, or anything supernatural":"อายุและลักษณะที่แสดงเป็นการประเมินจากสิ่งที่มองเห็นเพื่อความบันเทิง ไม่ใช่การยืนยันอัตลักษณ์ทางเพศ เพศกำเนิด หรือสิ่งเหนือธรรมชาติ"
   });
  }catch(e){const msg=String(e?.message||e);console.error("ghostcam",msg);if(msg.includes("IMAGE_TOO_LARGE"))return res.status(413).json({error:"ภาพจากกล้องมีขนาดใหญ่เกินไป"});const m=msg.match(/Gemini\s+(\d{3})/);return res.status(502).json({error:"AI วิเคราะห์เฟรมนี้ไม่สำเร็จ กรุณาลองใหม่",code:m?"GEMINI_"+m[1]:"AI_ERROR"})}
 }
