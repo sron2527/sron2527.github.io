@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ghost Cam AI V1.3.10 — กล้องสดวิเคราะห์ความผิดปกติ</title>
+<title>Ghost Cam AI V1.3.11 — กล้องสดวิเคราะห์ความผิดปกติ</title>
 <meta name="description" content="กล้องสดบนเว็บ ตรวจจับโครงร่างและการเคลื่อนไหว พร้อมให้ Gemini AI วิเคราะห์เฟรมจากกล้องเป็นระยะเพื่อความบันเทิง">
 <meta name="theme-color" content="#020706">
 <meta name="google-adsense-account" content="ca-pub-2159748672978364">
@@ -130,7 +130,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
 </div>
 <header><div class="nav"><div class="logo" aria-label="GHOST CAM AI"></div><div class="brand"><b>GHOST CAM AI</b><small>Live anomaly scanner • Entertainment</small></div><div id="livePill" class="livepill">● CAMERA OFF</div><div class="langSwitch" aria-label="Language"><button id="langTh" class="langBtn">ไทย</button><button id="langEn" class="langBtn">ENG</button></div></div></header>
 <main>
- <div class="intro"><div><h1 id="pageTitle">V1.3.10 กล้องส่องผี AI</h1><p id="pageSub">ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.10 LIVE</span></div>
+ <div class="intro"><div><h1 id="pageTitle">V1.3.11 กล้องส่องผี AI</h1><p id="pageSub">ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ</p></div><span class="version">V1.3.11 LIVE</span></div>
  <section id="stage" class="stage">
   <video id="video" autoplay muted playsinline></video>
   <canvas id="overlay" class="overlay"></canvas>
@@ -200,13 +200,13 @@ const API="https://nganchai-api.vercel.app/api/ghostcam";
 const video=document.getElementById("video"),overlay=document.getElementById("overlay"),ctx=overlay.getContext("2d");
 const motionCanvas=document.getElementById("motionCanvas"),mctx=motionCanvas.getContext("2d",{willReadFrequently:true});
 let stream=null,facing="environment",cameraOn=false,aiScanning=false,aiBusy=false,scanTimer=null,pose=null,poseBusy=false,lastPoseCount=0,motion=0,lastPixels=null,scanCount=0,rafId=0,aiScanScore=0,lastAiResultAt=0;
-let soundEnabled=true,audioCtx=null,masterGain=null,ambientGain=null,ambientNodes=[],lastSignalSoundAt=0;
+let soundEnabled=true,audioCtx=null,masterGain=null,audioCompressor=null,ambientGain=null,ambientNodes=[],lastSignalSoundAt=0;
 let audioVolume=Math.max(.2,Math.min(1,Number(localStorage.getItem("ghostVolume"))||.85));
 let hapticSupported=typeof navigator.vibrate==="function",hapticEnabled=localStorage.getItem("ghostHaptic")!=="off",lastHapticAt=0;
 let currentLang=localStorage.getItem("ghostLang")||((navigator.language||"").toLowerCase().startsWith("th")?"th":"en");
 const I18N={
  th:{
-  pageTitle:"V1.3.10 กล้องส่องผี AI",pageSub:"ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ",
+  pageTitle:"V1.3.11 กล้องส่องผี AI",pageSub:"ภาพสดจากกล้อง + ตรวจจับโครงร่าง + Gemini วิเคราะห์เฟรมจากภาพสดเป็นระยะ",
   emptyTitle:"เปิดกล้องเพื่อเริ่มสแกน",emptyText:"ใช้กล้องหลังมือถือแบบสด ระบบวาดโครงร่างที่ตรวจพบในเครื่อง และส่งภาพนิ่งจากกล้องไปให้ Gemini วิเคราะห์เป็นช่วง ๆ",openCamera:"📷 เปิดกล้องสด",
   scanStart:"🤖 เริ่ม AI SCAN",scanActive:"🟢 AI SCAN ทำงาน",shot:"📸 บันทึกภาพ",switchCam:"🔄 สลับกล้อง",
   resultHeading:"🔎 ผลวิเคราะห์ล่าสุด",waitScan:"รอเริ่มสแกน",resultIntro:"เปิดกล้องก่อน แล้วกด “เริ่ม AI SCAN” ระบบจะวิเคราะห์เฟรมจากกล้องสดประมาณทุก 10 วินาที",
@@ -222,7 +222,7 @@ const I18N={
   possibleCause:"สาเหตุที่เป็นไปได้: ",scanFailed:"AI Scan ไม่สำเร็จ",tryAgain:"กรุณาลองใหม่",cameraPermission:"เปิดกล้องไม่ได้ กรุณาอนุญาตสิทธิ์กล้องให้เว็บไซต์ แล้วลองใหม่อีกครั้ง",openFirst:"กรุณาเปิดกล้องก่อนครับ",ageConfidence:"มั่นใจ",hapticOn:"📳 การสั่น ON",hapticOff:"📵 การสั่น OFF",hapticNA:"📳 เครื่องนี้ไม่รองรับการสั่น",volumeLabel:"🔊 ระดับเสียง"
  },
  en:{
-  pageTitle:"V1.3.10 Ghost Cam AI",pageSub:"Live camera + pose detection + periodic Gemini frame analysis",
+  pageTitle:"V1.3.11 Ghost Cam AI",pageSub:"Live camera + pose detection + periodic Gemini frame analysis",
   emptyTitle:"Open camera to start scanning",emptyText:"Uses your live camera, draws detected pose outlines in the browser, and periodically sends a reduced still frame to Gemini for analysis.",openCamera:"📷 OPEN LIVE CAMERA",
   scanStart:"🤖 START AI SCAN",scanActive:"🟢 AI SCAN ACTIVE",shot:"📸 CAPTURE",switchCam:"🔄 SWITCH CAMERA",
   resultHeading:"🔎 Latest Analysis",waitScan:"Waiting to scan",resultIntro:"Open the camera, then press “START AI SCAN”. The system analyzes a live-camera frame about every 10 seconds.",
@@ -282,7 +282,9 @@ async function ensureAudio(){
   const AC=window.AudioContext||window.webkitAudioContext;
   if(!AC)return false;
   audioCtx=new AC();
-  masterGain=audioCtx.createGain();masterGain.gain.value=audioVolume;masterGain.connect(audioCtx.destination);
+  masterGain=audioCtx.createGain();masterGain.gain.value=Math.min(1.4,audioVolume*1.4);
+  audioCompressor=audioCtx.createDynamicsCompressor();audioCompressor.threshold.value=-20;audioCompressor.knee.value=16;audioCompressor.ratio.value=5;audioCompressor.attack.value=.003;audioCompressor.release.value=.22;
+  masterGain.connect(audioCompressor).connect(audioCtx.destination);
  }
  if(audioCtx.state==="suspended"){try{await audioCtx.resume()}catch(e){}}
  return audioCtx.state==="running";
@@ -294,19 +296,19 @@ function stopAmbient(){
 async function startAmbient(){
  if(!soundEnabled||ambientNodes.length)return;
  if(!await ensureAudio())return;
- ambientGain=audioCtx.createGain();ambientGain.gain.value=.075;ambientGain.connect(masterGain);
- const o1=audioCtx.createOscillator();o1.type="sine";o1.frequency.value=92;
- const o2=audioCtx.createOscillator();o2.type="triangle";o2.frequency.value=137;o2.detune.value=-7;
- const g1=audioCtx.createGain();g1.gain.value=.5;
- const g2=audioCtx.createGain();g2.gain.value=.2;
+ ambientGain=audioCtx.createGain();ambientGain.gain.value=.13;ambientGain.connect(masterGain);
+ const o1=audioCtx.createOscillator();o1.type="sine";o1.frequency.value=170;
+ const o2=audioCtx.createOscillator();o2.type="triangle";o2.frequency.value=245;o2.detune.value=-7;
+ const g1=audioCtx.createGain();g1.gain.value=.58;
+ const g2=audioCtx.createGain();g2.gain.value=.28;
  o1.connect(g1).connect(ambientGain);o2.connect(g2).connect(ambientGain);
  const lfo=audioCtx.createOscillator();lfo.type="sine";lfo.frequency.value=.11;
  const lfoGain=audioCtx.createGain();lfoGain.gain.value=.012;lfo.connect(lfoGain).connect(ambientGain.gain);
  const len=audioCtx.sampleRate*2,buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),ch=buf.getChannelData(0);
  for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*.42;
  const noise=audioCtx.createBufferSource();noise.buffer=buf;noise.loop=true;
- const lp=audioCtx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=520;lp.Q.value=.7;
- const ng=audioCtx.createGain();ng.gain.value=.07;noise.connect(lp).connect(ng).connect(ambientGain);
+ const lp=audioCtx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=1100;lp.Q.value=.7;
+ const ng=audioCtx.createGain();ng.gain.value=.11;noise.connect(lp).connect(ng).connect(ambientGain);
  o1.start();o2.start();lfo.start();noise.start();
  ambientNodes=[o1,o2,lfo,noise,g1,g2,lfoGain,lp,ng];
 }
@@ -319,14 +321,14 @@ async function tone(freq=440,duration=.12,gain=.08,type="sine",when=0){
  g.gain.exponentialRampToValueAtTime(.0001,t+duration);
  o.connect(g).connect(masterGain);o.start(t);o.stop(t+duration+.03);
 }
-function playScanTick(){tone(620,.075,.085,"sine");tone(860,.065,.055,"sine",.08)}
+function playScanTick(){tone(720,.08,.13,"sine");tone(980,.07,.09,"sine",.085)}
 function playSignalSound(){
  const now=Date.now();if(now-lastSignalSoundAt<3500)return;lastSignalSoundAt=now;
- tone(330,.16,.16,"square");tone(480,.18,.12,"sine",.16);
+ tone(430,.18,.24,"square");tone(690,.2,.19,"sine",.17);
 }
 function playHighSignalSound(){
  const now=Date.now();if(now-lastSignalSoundAt<3500)return;lastSignalSoundAt=now;
- tone(110,.4,.22,"sine");tone(165,.38,.15,"triangle",.03);tone(520,.13,.14,"sawtooth",.3);tone(360,.2,.1,"sine",.46);
+ tone(180,.42,.28,"sine");tone(270,.4,.2,"triangle",.03);tone(760,.15,.22,"sawtooth",.3);tone(520,.22,.16,"sine",.47);
 }
 async function toggleSound(){
  soundEnabled=!soundEnabled;
@@ -338,7 +340,7 @@ async function toggleSound(){
 function setAudioVolume(value){
  audioVolume=Math.max(.2,Math.min(1,Number(value)/100));
  localStorage.setItem("ghostVolume",String(audioVolume));
- if(masterGain&&audioCtx)masterGain.gain.setTargetAtTime(audioVolume,audioCtx.currentTime,.03);
+ if(masterGain&&audioCtx)masterGain.gain.setTargetAtTime(Math.min(1.4,audioVolume*1.4),audioCtx.currentTime,.03);
  setText("volumeValue",Math.round(audioVolume*100)+"%");
 }
 function initVolumeControl(){
@@ -424,20 +426,21 @@ function motionLoop(){
 }
 
 function grabFrame(){
- const c=document.createElement("canvas");const max=720;let w=video.videoWidth||720,h=video.videoHeight||1280;const r=Math.min(1,max/Math.max(w,h));w=Math.round(w*r);h=Math.round(h*r);c.width=w;c.height=h;c.getContext("2d").drawImage(video,0,0,w,h);return c.toDataURL("image/jpeg",.72);
+ const c=document.createElement("canvas");const max=480;let w=video.videoWidth||480,h=video.videoHeight||854;const r=Math.min(1,max/Math.max(w,h));w=Math.round(w*r);h=Math.round(h*r);c.width=w;c.height=h;c.getContext("2d").drawImage(video,0,0,w,h);return c.toDataURL("image/jpeg",.56);
 }
 
 async function analyzeFrame(){
  if(!cameraOn||aiBusy)return;aiBusy=true;setText("aiState","SCANNING");playScanTick();updateOverlay(tr("analyzing"),aiScanScore,tr("estimating"),tr("estimating"),"medium");
  try{
-  const res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({frame:grabFrame(),motion,poseCount:lastPoseCount,lang:currentLang})});
+  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);
+  let res;try{res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({frame:grabFrame(),motion,poseCount:lastPoseCount,lang:currentLang}),signal:ctrl.signal})}finally{clearTimeout(timer)}
   const d=await res.json().catch(()=>({}));if(!res.ok)throw new Error((d.error||"AI วิเคราะห์ไม่ได้")+(d.code?" ("+d.code+")":""));
   aiScanScore=Math.round(d.anomalyScore||0);scanCount++;setText("scanCount",scanCount);setText("score",aiScanScore);$("meterBar").style.width=aiScanScore+"%";addRadarBlip(aiScanScore>=70?"high":aiScanScore>=40?"medium":"low");setText("radarText",aiScanScore>=70?"HIGH SIGNAL":aiScanScore>=40?"SIGNAL FOUND":"RADAR ACTIVE");lastAiResultAt=Date.now();const level=aiScanScore>=70?"high":aiScanScore>=40?"medium":"idle";const headline=d.humanLike?tr("humanDetected")+(d.zone?" • "+d.zone:""):(aiScanScore>=40?tr("visualAnomaly"):tr("nothingClear"));updateOverlay(headline,aiScanScore,d.apparentAge||tr("unknown"),d.eraImpression||tr("unknown"),level,d.appearancePresentation||tr("unknown"),d.appearanceConfidence||0);if(aiScanScore>=70){playHighSignalSound();vibrateAlert("high")}else if(aiScanScore>=40||d.humanLike){playSignalSound();vibrateAlert("medium")}
   setText("resultTitle",d.humanLike?tr("humanDetected"):tr("nothingHuman"));setText("resultText",d.summary||"—");
   setText("humanLike",d.humanLike?tr("found"):tr("unclear"));setText("zone",d.zone||"—");setText("confidence",Math.round(d.confidence||0)+"%");setText("ageDetail",(d.apparentAge||tr("unknown"))+(d.ageConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.ageConfidence)+"%)":""));setText("eraDetail",d.eraImpression||tr("unknown"));
   setText("appearanceDetail",(d.appearancePresentation||tr("unknown"))+(d.appearanceConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.appearanceConfidence)+"%)":""));
   const obs=[...(d.observations||[]),...(d.possibleCauses||[]).map(x=>tr("possibleCause")+x)];$("observations").innerHTML=obs.map(x=>"<li>"+escapeHtml(x)+"</li>").join("");
- }catch(e){setText("resultTitle",tr("scanFailed"));setText("resultText",e.message||tr("tryAgain"));}
+ }catch(e){setText("resultTitle",tr("scanFailed"));setText("resultText",e?.name==="AbortError"?(currentLang==="en"?"Analysis took too long. Please scan again.":"วิเคราะห์นานเกินไป กรุณาสแกนใหม่อีกครั้ง"):(e.message||tr("tryAgain")));}
  finally{aiBusy=false;setText("aiState",aiScanning?"ACTIVE":"IDLE")}
 }
 
