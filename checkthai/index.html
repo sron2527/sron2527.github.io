@@ -231,6 +231,7 @@ const video=document.getElementById("video"),overlay=document.getElementById("ov
 const motionCanvas=document.getElementById("motionCanvas"),mctx=motionCanvas.getContext("2d",{willReadFrequently:true});
 let stream=null,facing="environment",cameraOn=false,aiScanning=false,aiBusy=false,scanTimer=null,pose=null,poseBusy=false,lastPoseCount=0,motion=0,lastPixels=null,scanCount=0,rafId=0,aiScanScore=0,lastAiResultAt=0;
 let lastPoseAiTriggerAt=0,poseWasLocked=false;
+let targetLockUntil=0,lastLockedResult=null;const TARGET_LOCK_MS=15000;
 const mobileFast=window.matchMedia("(max-width: 820px)").matches||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"");
 const poseDelay=mobileFast?360:180;
 const motionDelay=mobileFast?700:450;
@@ -301,6 +302,27 @@ function ghostAlert(message){
 }
 function closeGhostAlert(){$("ghostModalBack")?.classList.remove("show")}
 
+
+function isTargetLocked(){return Date.now()<targetLockUntil&&lastLockedResult}
+function lockTarget(result){
+ lastLockedResult=result;
+ targetLockUntil=Date.now()+TARGET_LOCK_MS;
+}
+function renderLockedTarget(){
+ if(!isTargetLocked())return false;
+ const r=lastLockedResult;
+ updateOverlay(r.headline,r.score,r.age,r.era,r.level,r.appearance,r.appearanceConfidence);
+ setText("resultTitle",r.resultTitle);
+ setText("resultText",r.resultText);
+ setText("humanLike",r.humanLikeText);
+ setText("zone",r.zone||"—");
+ setText("confidence",r.confidenceText);
+ setText("ageDetail",r.ageDetail);
+ setText("eraDetail",r.eraDetail);
+ setText("appearanceDetail",r.appearanceDetail);
+ if(Array.isArray(r.obs))$("observations").innerHTML=r.obs.map(x=>"<li>"+escapeHtml(x)+"</li>").join("");
+ return true;
+}
 
 function updateOverlay(main,score=0,age="—",era="—",level="idle",appearance="—",appearanceConfidence=0){
  const box=$("detectAlert");box.className="detectAlert "+level;
@@ -416,7 +438,7 @@ function drawPose(results){
  const lm=results.poseLandmarks;lastPoseCount=lm?1:0;setText("poseCount",lastPoseCount);setText("poseState",lm?"LOCK":"SCAN");setText("overlayPose",lastPoseCount);
  if(!lm){poseWasLocked=false;return}
  const now=Date.now();
- if(now-lastAiResultAt>2500){
+ if(now-lastAiResultAt>2500 && !isTargetLocked()){
   updateOverlay(tr("poseDetected"),Math.max(aiScanScore,20),"AI…",tr("checking"),"medium","AI…",0);
  }
  if(aiScanning && (!poseWasLocked || now-lastPoseAiTriggerAt>9000) && !aiBusy){
@@ -480,6 +502,7 @@ function grabFrame(){
 }
 
 function renderLocalFallback(reason=""){
+ if(renderLockedTarget())return;
  const localScore=Math.max(0,Math.min(65,Math.round(motion*.55+(lastPoseCount?28:0))));
  const level=localScore>=40?"medium":"idle";
  const title=lastPoseCount?(currentLang==="en"?"Human-like pose detected • Local Fast Mode":"ตรวจพบโครงร่างคล้ายบุคคล • Local Fast Mode"):(currentLang==="en"?"Fast local result • Cloud AI unavailable":"แสดงผลแบบเร็วจากเครื่อง • Cloud AI ยังไม่ตอบ");
@@ -503,16 +526,32 @@ async function analyzeFrame(){
  const localMsg=lastPoseCount
   ?(currentLang==="en"?"Local detection ready • AI refining details":"ตรวจจับในเครื่องแล้ว • AI กำลังเสริมรายละเอียด")
   :(currentLang==="en"?"Local scan ready • AI refining details":"สแกนในเครื่องแล้ว • AI กำลังเสริมรายละเอียด");
- updateOverlay(localMsg,Math.max(aiScanScore,lastPoseCount?28:Math.round(motion*.45)),"AI…",tr("checking"),lastPoseCount?"medium":"idle","AI…",0);
+ if(!isTargetLocked())updateOverlay(localMsg,Math.max(aiScanScore,lastPoseCount?28:Math.round(motion*.45)),"AI…",tr("checking"),lastPoseCount?"medium":"idle","AI…",0);
  try{
   const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),mobileFast?3600:4600);
   let res;try{res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({frame:grabFrame(),motion,poseCount:lastPoseCount,lang:currentLang,mobileFast}),signal:ctrl.signal})}finally{clearTimeout(timer)}
   const d=await res.json().catch(()=>({}));if(!res.ok)throw new Error((d.error||"AI วิเคราะห์ไม่ได้")+(d.code?" ("+d.code+")":""));
-  aiScanScore=Math.round(d.anomalyScore||0);scanCount++;setText("scanCount",scanCount);setText("score",aiScanScore);$("meterBar").style.width=aiScanScore+"%";addRadarBlip(aiScanScore>=70?"high":aiScanScore>=40?"medium":"low");setText("radarText",aiScanScore>=70?"HIGH SIGNAL":aiScanScore>=40?"SIGNAL FOUND":"RADAR ACTIVE");lastAiResultAt=Date.now();const level=aiScanScore>=70?"high":aiScanScore>=40?"medium":"idle";const headline=d.humanLike?tr("humanDetected")+(d.zone?" • "+d.zone:""):(aiScanScore>=40?tr("visualAnomaly"):tr("nothingClear"));updateOverlay(headline,aiScanScore,d.apparentAge||tr("unknown"),d.eraImpression||tr("unknown"),level,d.appearancePresentation||tr("unknown"),d.appearanceConfidence||0);if(aiScanScore>=70){playHighSignalSound();vibrateAlert("high")}else if(aiScanScore>=40||d.humanLike){playSignalSound();vibrateAlert("medium")}
-  setText("resultTitle",d.humanLike?tr("humanDetected"):tr("nothingHuman"));setText("resultText",d.summary||"—");
-  setText("humanLike",d.humanLike?tr("found"):tr("unclear"));setText("zone",d.zone||"—");setText("confidence",Math.round(d.confidence||0)+"%");setText("ageDetail",(d.apparentAge||tr("unknown"))+(d.ageConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.ageConfidence)+"%)":""));setText("eraDetail",d.eraImpression||tr("unknown"));
-  setText("appearanceDetail",(d.appearancePresentation||tr("unknown"))+(d.appearanceConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.appearanceConfidence)+"%)":""));
-  const obs=[...(d.observations||[]),...(d.possibleCauses||[]).map(x=>tr("possibleCause")+x)];$("observations").innerHTML=obs.map(x=>"<li>"+escapeHtml(x)+"</li>").join("");
+  aiScanScore=Math.round(d.anomalyScore||0);scanCount++;setText("scanCount",scanCount);setText("score",aiScanScore);$("meterBar").style.width=aiScanScore+"%";addRadarBlip(aiScanScore>=70?"high":aiScanScore>=40?"medium":"low");setText("radarText",aiScanScore>=70?"HIGH SIGNAL":aiScanScore>=40?"SIGNAL FOUND":"RADAR ACTIVE");lastAiResultAt=Date.now();
+  const level=aiScanScore>=70?"high":aiScanScore>=40?"medium":"idle";
+  const headline=d.humanLike?tr("humanDetected")+(d.zone?" • "+d.zone:""):(aiScanScore>=40?tr("visualAnomaly"):tr("nothingClear"));
+  const resultTitle=d.humanLike?tr("humanDetected"):tr("nothingHuman");
+  const humanLikeText=d.humanLike?tr("found"):tr("unclear");
+  const confidenceText=Math.round(d.confidence||0)+"%";
+  const ageDetail=(d.apparentAge||tr("unknown"))+(d.ageConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.ageConfidence)+"%)":"");
+  const eraDetail=d.eraImpression||tr("unknown");
+  const appearanceDetail=(d.appearancePresentation||tr("unknown"))+(d.appearanceConfidence?" ("+tr("ageConfidence")+" "+Math.round(d.appearanceConfidence)+"%)":"");
+  const obs=[...(d.observations||[]),...(d.possibleCauses||[]).map(x=>tr("possibleCause")+x)];
+  const shouldLock=Boolean(d.humanLike)||aiScanScore>=40;
+  if(shouldLock){
+   lockTarget({headline,score:aiScanScore,age:d.apparentAge||tr("unknown"),era:d.eraImpression||tr("unknown"),level,appearance:d.appearancePresentation||tr("unknown"),appearanceConfidence:d.appearanceConfidence||0,resultTitle,resultText:d.summary||"—",humanLikeText,zone:d.zone||"—",confidenceText,ageDetail,eraDetail,appearanceDetail,obs});
+  }
+  if(!isTargetLocked()||shouldLock){
+   updateOverlay(headline,aiScanScore,d.apparentAge||tr("unknown"),d.eraImpression||tr("unknown"),level,d.appearancePresentation||tr("unknown"),d.appearanceConfidence||0);
+   setText("resultTitle",resultTitle);setText("resultText",d.summary||"—");
+   setText("humanLike",humanLikeText);setText("zone",d.zone||"—");setText("confidence",confidenceText);setText("ageDetail",ageDetail);setText("eraDetail",eraDetail);setText("appearanceDetail",appearanceDetail);
+   $("observations").innerHTML=obs.map(x=>"<li>"+escapeHtml(x)+"</li>").join("");
+  }else renderLockedTarget();
+  if(aiScanScore>=70){playHighSignalSound();vibrateAlert("high")}else if(aiScanScore>=40||d.humanLike){playSignalSound();vibrateAlert("medium")}
  }catch(e){const msg=String(e?.message||"");renderLocalFallback(msg);setText("aiState",aiScanning?"LOCAL":"IDLE");}
  finally{aiBusy=false;if(!aiScanning)setText("aiState","IDLE")}
 }
@@ -521,7 +560,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":
 function toggleScan(){
  if(!cameraOn){ghostAlert(tr("openFirst"));return}
  aiScanning=!aiScanning;$("scanBtn").classList.toggle("active",aiScanning);$("scanBtn").textContent=aiScanning?tr("scanActive"):tr("scanStart");setText("aiState",aiScanning?"ACTIVE":"IDLE");
- clearInterval(scanTimer);if(aiScanning){updateOverlay(tr("scanBegin"),aiScanScore,tr("estimating"),tr("checking"),"medium",tr("estimating"),0);lastPoseAiTriggerAt=0;analyzeFrame();scanTimer=setInterval(analyzeFrame,aiInterval)}else{updateOverlay(tr("scanStopped"),aiScanScore,$("overlayAge").textContent,$("overlayEra").textContent,"idle")}
+ clearInterval(scanTimer);if(aiScanning){if(!isTargetLocked())updateOverlay(tr("scanBegin"),aiScanScore,tr("estimating"),tr("checking"),"medium",tr("estimating"),0);else renderLockedTarget();lastPoseAiTriggerAt=0;analyzeFrame();scanTimer=setInterval(analyzeFrame,aiInterval)}else{if(!renderLockedTarget())updateOverlay(tr("scanStopped"),aiScanScore,$("overlayAge").textContent,$("overlayEra").textContent,"idle")}
 }
 function toggleNight(){$("stage").classList.toggle("night");$("nightBtn").classList.toggle("active");}
 function capture(){
