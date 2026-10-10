@@ -8,46 +8,46 @@ async function gemini(parts){
  const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;
  if(!key)throw new Error("NOT_CONFIGURED");
  const fastMode=Boolean(parts?.[0]?.text?.includes("__MOBILE_FAST__"));
- const models=[
-  process.env.GEMINI_FAST_MODEL,
-  process.env.GEMINI_MODEL,
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash"
- ].filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,2);
- const started=Date.now(),deadline=fastMode?4800:6000;
- let last=null,all404=true;
- for(const model of models){
-  const remaining=deadline-(Date.now()-started);
-  if(remaining<900)break;
+ const models=["gemini-3.5-flash-lite","gemini-3.8-flash"];
+ const started=Date.now(),deadline=fastMode?3200:4200;
+ let last=null;
+ for(let i=0;i<models.length;i++){
+  const model=models[i],remaining=deadline-(Date.now()-started);
+  if(remaining<650)break;
   const ctrl=new AbortController();
-  const timer=setTimeout(()=>ctrl.abort(),Math.min(fastMode?3200:4000,remaining));
+  const perTry=i===0?Math.min(fastMode?2400:3000,remaining):remaining;
+  const timer=setTimeout(()=>ctrl.abort(),perTry);
   try{
    const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{
     method:"POST",
     headers:{"Content-Type":"application/json","x-goog-api-key":key},
     body:JSON.stringify({
      contents:[{parts}],
-     generationConfig:{responseMimeType:"application/json",maxOutputTokens:fastMode?180:260,temperature:.05}
+     generationConfig:{
+      responseMimeType:"application/json",
+      maxOutputTokens:fastMode?140:190,
+      thinkingConfig:{thinkingLevel:"minimal"}
+     }
     }),
     signal:ctrl.signal
    });
    if(r.ok)return await r.json();
    const body=await r.text();
-   last=new Error("Gemini "+r.status+" "+model+" "+body.slice(0,160));
-   if(r.status!==404)all404=false;
+   last=new Error("Gemini "+r.status+" "+model+" "+body.slice(0,140));
    if(![404,429,500,502,503,504].includes(r.status))throw last;
+   if(r.status!==404&&r.status!==429)break;
   }catch(e){
    last=e;
-   if(e?.name!=="AbortError")all404=false;
+   if(e?.name==="AbortError")break;
   }finally{clearTimeout(timer)}
  }
- if(all404)throw new Error("MODEL_UNAVAILABLE");
- if(Date.now()-started>=deadline || last?.name==="AbortError")throw new Error("AI_TIMEOUT");
+ if(last?.name==="AbortError"||Date.now()-started>=deadline)throw new Error("AI_TIMEOUT");
+ if(String(last?.message||"").includes("404"))throw new Error("MODEL_UNAVAILABLE");
  throw last||new Error("AI_FAILED");
 }
 export default async function handler(req,res){
  cors(req,res);res.setHeader("Cache-Control","no-store");if(req.method==="OPTIONS")return res.status(204).end();
- if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.14.3"});
+ if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.14.4"});
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
   if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:req.body?.lang==="en"?"AI is not ready yet":"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
