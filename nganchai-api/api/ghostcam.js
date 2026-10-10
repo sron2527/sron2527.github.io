@@ -47,7 +47,7 @@ async function gemini(parts){
 }
 export default async function handler(req,res){
  cors(req,res);res.setHeader("Cache-Control","no-store");if(req.method==="OPTIONS")return res.status(204).end();
- if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.14.4"});
+ if(req.method==="GET")return res.status(200).json({ok:true,service:"ghostcam",configured:Boolean(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY),version:"1.3.15"});
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
   if(!(process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY))return res.status(503).json({error:req.body?.lang==="en"?"AI is not ready yet":"AI ยังไม่พร้อมใช้งาน",code:"NOT_CONFIGURED"});
@@ -60,13 +60,14 @@ export default async function handler(req,res){
    mobileFast?"__MOBILE_FAST__":"",
    lang==="en"?"Analyze this camera frame for the Ghost Cam AI entertainment app. Describe ONLY visible evidence; never claim a ghost/spirit is real.":"วิเคราะห์เฟรมกล้องนี้สำหรับแอป Ghost Cam AI เพื่อความบันเทิง อธิบายเฉพาะสิ่งที่มองเห็น ห้ามยืนยันว่ามีผีหรือวิญญาณจริง",
    "motion="+motion+"%, poseCount="+poseCount,
-   lang==="en"?(mobileFast?"Return very compact JSON. Prioritize humanLike, zone, anomalyScore, confidence, apparentAge, eraImpression and appearancePresentation. Keep observations/causes to at most 1 item.":"Return compact JSON. Detect human-like shape, approximate zone, visual anomaly 0-100, 1-3 observations, ordinary causes, confidence, apparent age RANGE only if clearly visible, era impression, and visible presentation as masculine-presenting/feminine-presenting/unable to determine."):(mobileFast?"ตอบ JSON สั้นมาก เน้น humanLike, zone, anomalyScore, confidence, apparentAge, eraImpression และ appearancePresentation โดย observations/possibleCauses อย่างละไม่เกิน 1 ข้อ":"ตอบ JSON แบบสั้น ตรวจรูปร่างคล้ายคน ตำแหน่ง คะแนนความผิดปกติ 0-100 สิ่งที่เห็น 1-3 ข้อ สาเหตุธรรมดา ความมั่นใจ ช่วงอายุเมื่อเห็นชัด ลักษณะยุค และลักษณะที่มองเห็นเป็น ดูคล้ายผู้ชาย/ดูคล้ายผู้หญิง/ระบุไม่ได้"),
-   lang==="en"?'{"summary":"","anomalyScore":0,"humanLike":false,"people":0,"zone":"","observations":[],"possibleCauses":[],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine","appearancePresentation":"unable to determine","appearanceConfidence":0}':'{"summary":"","anomalyScore":0,"humanLike":false,"people":0,"zone":"","observations":[],"possibleCauses":[],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้","appearancePresentation":"ระบุไม่ได้","appearanceConfidence":0}'
+   lang==="en"?(mobileFast?"Return very compact JSON. Prioritize humanLike, zone, anomalyScore, confidence, apparentAge, eraImpression, appearancePresentation, visibleExpression and expressionConfidence. Keep observations/causes to at most 1 item.":"Return compact JSON. Detect human-like shape, approximate zone, visual anomaly 0-100, 1-3 observations, ordinary causes, confidence, apparent age RANGE only if clearly visible, era impression, visible presentation as masculine-presenting/feminine-presenting/unable to determine, and visible facial expression only (e.g. neutral, smiling, laughing, crying-looking, angry-looking, sad-looking, worried-looking, surprised-looking, unable to determine). Do not claim inner emotional state."):(mobileFast?"ตอบ JSON สั้นมาก เน้น humanLike, zone, anomalyScore, confidence, apparentAge, eraImpression, appearancePresentation, visibleExpression และ expressionConfidence โดย observations/possibleCauses อย่างละไม่เกิน 1 ข้อ":"ตอบ JSON แบบสั้น ตรวจรูปร่างคล้ายคน ตำแหน่ง คะแนนความผิดปกติ 0-100 สิ่งที่เห็น 1-3 ข้อ สาเหตุธรรมดา ความมั่นใจ ช่วงอายุเมื่อเห็นชัด ลักษณะยุค ลักษณะที่มองเห็นเป็น ดูคล้ายผู้ชาย/ดูคล้ายผู้หญิง/ระบุไม่ได้ และลักษณะสีหน้าที่มองเห็น เช่น เป็นกลาง ยิ้ม หัวเราะ คล้ายร้องไห้ คล้ายโกรธ คล้ายเศร้า คล้ายกังวล คล้ายตกใจ หรือ ระบุไม่ได้ ห้ามฟันธงอารมณ์ภายในจริง"),
+   lang==="en"?'{"summary":"","anomalyScore":0,"humanLike":false,"people":0,"zone":"","observations":[],"possibleCauses":[],"confidence":0,"apparentAge":"Unable to estimate","ageConfidence":0,"eraImpression":"Unable to determine","appearancePresentation":"unable to determine","appearanceConfidence":0,"visibleExpression":"unable to determine","expressionConfidence":0}':'{"summary":"","anomalyScore":0,"humanLike":false,"people":0,"zone":"","observations":[],"possibleCauses":[],"confidence":0,"apparentAge":"ระบุไม่ได้","ageConfidence":0,"eraImpression":"ระบุไม่ได้","appearancePresentation":"ระบุไม่ได้","appearanceConfidence":0,"visibleExpression":"ระบุไม่ได้","expressionConfidence":0}'
   ].join("\n");
   const d=await gemini([{text:prompt},frame]);const x=parseJson(textOf(d));
   const apparentAge=clean(x.apparentAge,80)||(lang==="en"?"Unable to estimate":"ระบุไม่ได้");
   const eraImpression=clean(x.eraImpression,100)||(lang==="en"?"Unable to determine":"ระบุไม่ได้");
   const appearancePresentation=clean(x.appearancePresentation,80)||(lang==="en"?"unable to determine":"ระบุไม่ได้");
+  const visibleExpression=clean(x.visibleExpression,80)||(lang==="en"?"unable to determine":"ระบุไม่ได้");
   return res.status(200).json({
    ok:true,
    summary:clean(x.summary,500)||(lang==="en"?"No clear anomaly detected":"ยังไม่พบสิ่งผิดปกติชัดเจน"),
@@ -82,6 +83,8 @@ export default async function handler(req,res){
    eraImpression,
    appearancePresentation,
    appearanceConfidence:Math.max(0,Math.min(100,Number(x.appearanceConfidence)||0)),
+   visibleExpression,
+   expressionConfidence:Math.max(0,Math.min(100,Number(x.expressionConfidence)||0)),
    disclaimer:lang==="en"?"Age and appearance are estimates from visible presentation for entertainment only. They do not establish gender identity, biological sex, or anything supernatural":"อายุและลักษณะที่แสดงเป็นการประเมินจากสิ่งที่มองเห็นเพื่อความบันเทิง ไม่ใช่การยืนยันอัตลักษณ์ทางเพศ เพศกำเนิด หรือสิ่งเหนือธรรมชาติ"
   });
  }catch(e){
