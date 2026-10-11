@@ -223,8 +223,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;back
     </div>
   </div>
  </div>
- <div class="adzone"><div><strong id="ad2Title">พื้นที่โฆษณา Google AdSense — จุดที่ 2</strong><span id="ad2Text">พื้นที่โฆษณาช่วงล่างของหน้าเว็บ<br>พร้อมใส่ Ad Unit หลังสร้างหน่วยโฆษณาใน AdSense</span></div></div>
-</main>
+ </main>
 
 <script>
 const API="https://nganchai-api.vercel.app/api/ghostcam";
@@ -281,7 +280,7 @@ function setHTML(id,v){const el=$(id);if(el)el.innerHTML=v}
 function applyLang(lang){
  currentLang=lang==="en"?"en":"th";localStorage.setItem("ghostLang",currentLang);document.documentElement.lang=currentLang;
  $("langTh").classList.toggle("active",currentLang==="th");$("langEn").classList.toggle("active",currentLang==="en");
- const map={pageTitle:"pageTitle",pageSub:"pageSub",emptyTitle:"emptyTitle",emptyText:"emptyText",resultHeading:"resultHeading",humanLabel:"humanLabel",zoneLabel:"zoneLabel",confidenceLabel:"confidenceLabel",poseLabel:"poseLabel",ageLabel:"ageLabel",eraLabel:"eraLabel",appearanceLabel:"appearanceLabel",emotionLabel:"emotionLabel",ageDetailLabel:"ageDetailLabel",eraDetailLabel:"eraDetailLabel",appearanceDetailLabel:"appearanceDetailLabel",emotionDetailLabel:"emotionDetailLabel",ageDisclaimer:"ageDisclaimer",sensorHeading:"sensorHeading",sensorText:"sensorText",safety:"safetyNote",ad1Title:"ad1Title",ad2Title:"ad2Title"};
+ const map={pageTitle:"pageTitle",pageSub:"pageSub",emptyTitle:"emptyTitle",emptyText:"emptyText",resultHeading:"resultHeading",humanLabel:"humanLabel",zoneLabel:"zoneLabel",confidenceLabel:"confidenceLabel",poseLabel:"poseLabel",ageLabel:"ageLabel",eraLabel:"eraLabel",appearanceLabel:"appearanceLabel",emotionLabel:"emotionLabel",ageDetailLabel:"ageDetailLabel",eraDetailLabel:"eraDetailLabel",appearanceDetailLabel:"appearanceDetailLabel",emotionDetailLabel:"emotionDetailLabel",ageDisclaimer:"ageDisclaimer",sensorHeading:"sensorHeading",sensorText:"sensorText",safety:"safetyNote",ad1Title:"ad1Title"};
  for(const [k,id] of Object.entries(map)){const el=$(id);if(el)el.textContent=tr(k)}
  setHTML("ad1Text",tr("ad1Text"));setHTML("ad2Text",tr("ad2Text"));
  $("startBtn").textContent=tr("openCamera");$("shotBtn").textContent=tr("shot");$("switchBtn").textContent=tr("switchCam");
