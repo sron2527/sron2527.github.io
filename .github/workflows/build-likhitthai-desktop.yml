@@ -1,0 +1,39 @@
+name: Build LikhitThai Studio Windows Installer
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "likhitthai-desktop/**"
+      - ".github/workflows/build-likhitthai-desktop.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: likhitthai-desktop
+        run: npm install
+
+      - name: Build Windows installer
+        working-directory: likhitthai-desktop
+        run: npm run dist:win
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: LikhitThai-Studio-Windows-Installer
+          path: likhitthai-desktop/dist/*.exe
+          if-no-files-found: error
+          retention-days: 30
