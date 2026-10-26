@@ -1,6 +1,6 @@
 const { app, BrowserWindow, shell, session } = require("electron");
 
-const APP_URL = "https://sron2527.github.io/likhitthai/";
+const APP_URL = "https://sron2527.github.io/likhitthai/?appVersion=1.0.2";
 const APP_HOST = "sron2527.github.io";
 
 // Block the ad providers currently embedded in the hosted web app.
