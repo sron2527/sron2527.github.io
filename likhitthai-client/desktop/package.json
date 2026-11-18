@@ -1,0 +1,52 @@
+{
+  "name": "likhitthai-desktop-client",
+  "version": "1.0.3",
+  "description": "LikhitThai Studio desktop client",
+  "main": "main.cjs",
+  "author": "LikhitThai",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^39.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.likhitthai.studio",
+    "productName": "LikhitThai Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.cjs",
+      "package.json"
+    ],
+    "artifactName": "${productName}-${version}-${target}.${ext}",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LikhitThai Studio"
+    }
+  }
+}
