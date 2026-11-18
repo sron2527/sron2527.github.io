@@ -21,7 +21,7 @@
         <p class="lead">ใช้กล้องเว็บแคม ตรวจจับมือ แล้วหยิบอุปกรณ์ไปวางบนเมนบอร์ดให้ถูกตำแหน่ง</p>
       </div>
       <div class="intro-actions">
-        <button id="startCamera" class="primary">เปิดกล้องและเริ่มเล่น</button>
+        <button id="startCamera" class="primary">เปิดกล้องเพื่อใช้งานมือ</button>
         <button id="resetGame" class="secondary">เริ่มใหม่</button>
       </div>
     </section>
@@ -34,10 +34,10 @@
 
     <section class="game-shell">
       <div class="game-head">
-        <div><span class="eyebrow">MISSION 01</span><h2>ติดตั้งอุปกรณ์บนเมนบอร์ด</h2></div>
+        <div><span class="eyebrow">MISSION 01</span><h2>ภารกิจประกอบคอมพิวเตอร์</h2></div>
         <div class="hud">
-          <div class="timer-card"><small>TIME LEFT</small><strong id="timer">15</strong><span>วินาที</span></div>
-          <div class="progress-wrap"><span id="progressText">ติดตั้งแล้ว 0 / 4</span><div class="progress"><i id="progressBar"></i></div></div>
+          <div class="timer-card"><small>TIME LEFT</small><strong id="timer">20</strong><span>วินาที</span></div>
+          <div class="progress-wrap"><span id="progressText">ติดตั้งแล้ว 0 / 8</span><div class="progress"><i id="progressBar"></i></div></div>
           <div class="sound-control"><button id="soundToggle" class="secondary sound-btn" aria-pressed="true">🔊 เสียงเปิด</button></div>
         </div>
       </div>
@@ -48,8 +48,12 @@
           <div class="parts-list" id="partsList">
             <button class="part-card" data-part="cpu"><span class="part-art cpu-art"><i></i></span><span><b>CPU</b><small>หน่วยประมวลผล</small></span><span class="grab-hint">หยิบ</span></button>
             <button class="part-card" data-part="ram"><span class="part-art ram-art"><i></i></span><span><b>RAM</b><small>หน่วยความจำหลัก</small></span><span class="grab-hint">หยิบ</span></button>
-            <button class="part-card" data-part="ssd"><span class="part-art ssd-art"><i></i></span><span><b>SSD</b><small>อุปกรณ์จัดเก็บข้อมูล</small></span><span class="grab-hint">หยิบ</span></button>
-            <button class="part-card" data-part="gpu"><span class="part-art gpu-art"><i></i></span><span><b>GPU</b><small>การ์ดแสดงผล</small></span><span class="grab-hint">หยิบ</span></button>
+            <button class="part-card" data-part="ssd"><span class="part-art ssd-art"><i></i></span><span><b>M.2 SSD</b><small>ไดรฟ์จัดเก็บข้อมูล</small></span><span class="grab-hint">หยิบ</span></button>
+            <button class="part-card" data-part="gpu"><span class="part-art gpu-art"><i></i></span><span><b>GPU</b><small>การ์ดจอแยก</small></span><span class="grab-hint">หยิบ</span></button>
+            <button class="part-card" data-part="cooler"><span class="part-art cooler-art"><i></i></span><span><b>CPU COOLER</b><small>ชุดระบายความร้อน</small></span><span class="grab-hint">หยิบ</span></button>
+            <button class="part-card" data-part="psu"><span class="part-art psu-art"><i></i></span><span><b>POWER SUPPLY</b><small>ชุดจ่ายไฟ</small></span><span class="grab-hint">หยิบ</span></button>
+            <button class="part-card" data-part="hdd"><span class="part-art hdd-art"><i></i></span><span><b>HDD</b><small>ฮาร์ดดิสก์</small></span><span class="grab-hint">หยิบ</span></button>
+            <button class="part-card" data-part="fan"><span class="part-art fan-art"><i></i></span><span><b>CASE FAN</b><small>พัดลมระบายอากาศ</small></span><span class="grab-hint">หยิบ</span></button>
           </div>
           <div class="tip"><span>✦</span> เริ่มจากหยิบ CPU แล้ววางลงบน Socket ของเมนบอร์ด</div>
         </section>
@@ -59,15 +63,20 @@
           <div class="motherboard" id="motherboard">
             <div class="board-label">ATX · SYSTEM BOARD</div>
             <div class="board-chipset">CHIPSET</div>
-            <div class="slot slot-cpu" data-slot="cpu"><span class="slot-art">CPU</span><b>CPU SOCKET</b><small>วางหน่วยประมวลผล</small></div>
-            <div class="slot slot-ram" data-slot="ram"><span class="slot-art">RAM</span><b>DIMM SLOT</b><small>วางหน่วยความจำ</small></div>
-            <div class="slot slot-ssd" data-slot="ssd"><span class="slot-art">SSD</span><b>M.2 SLOT</b><small>วางอุปกรณ์จัดเก็บ</small></div>
-            <div class="slot slot-gpu" data-slot="gpu"><span class="slot-art">GPU</span><b>PCIe x16</b><small>วางการ์ดแสดงผล</small></div>
+            <div class="slot slot-cpu" data-slot="cpu"><span class="slot-art">CPU</span><b>CPU SOCKET</b></div>
+            <div class="slot slot-ram" data-slot="ram"><span class="slot-art">RAM</span><b>DIMM SLOT</b></div>
+            <div class="slot slot-ssd" data-slot="ssd"><span class="slot-art">M.2</span><b>M.2 SLOT</b></div>
+            <div class="slot slot-gpu" data-slot="gpu"><span class="slot-art">GPU</span><b>PCIe x16</b></div>
+            <div class="slot slot-cooler" data-slot="cooler"><span class="slot-art">FAN</span><b>CPU COOLER</b></div>
+            <div class="slot slot-psu" data-slot="psu"><span class="slot-art">PSU</span><b>POWER</b></div>
+            <div class="slot slot-hdd" data-slot="hdd"><span class="slot-art">HDD</span><b>SATA DRIVE</b></div>
+            <div class="slot slot-fan" data-slot="fan"><span class="slot-art">FAN</span><b>CASE FAN</b></div>
             <div class="board-lines"></div>
             <div class="board-footer">PC BUILDER TRAINING BOARD <span>REV 1.0</span></div>
           </div>
         </section>
 
+        <button class="gesture-start" id="gestureStart" type="button"><span class="start-symbol">▶</span><b>เริ่มภารกิจ</b><small id="startDwell">เลื่อนมือมาค้าง 3 วินาที</small><i class="dwell-meter"><i id="dwellFill"></i></i></button>
         <div class="hand-cursor" id="handCursor"><span>✋</span></div>
         <div class="camera-box">
           <video id="webcam" autoplay playsinline muted></video>
@@ -77,10 +86,10 @@
       </div>
 
       <div class="game-footer">
-        <div class="gesture-state" id="gestureState"><span class="gesture-icon">✋</span><span>รอเปิดกล้องเพื่อเริ่มตรวจจับมือ</span></div>
+        <div class="gesture-state" id="gestureState"><span class="gesture-icon">✋</span><span>เปิดกล้องก่อน แล้วเลื่อนมือไปค้างบนปุ่มเริ่มเกม 3 วินาที</span></div>
         <div class="score">คะแนน <b id="score">0</b></div>
       </div>
-      <div class="feedback" id="feedback" role="status">กด “เปิดกล้องและเริ่มเล่น” เพื่อเริ่มภารกิจ</div>
+      <div class="feedback" id="feedback" role="status">เปิดกล้อง จากนั้นใช้มือค้างบนปุ่มเริ่มภารกิจ 3 วินาที</div>
       <section class="result-panel" id="resultPanel" hidden>
         <div class="result-icon" id="resultIcon">🏆</div>
         <h3 id="resultTitle">ภารกิจสำเร็จ!</h3>
