@@ -35,7 +35,11 @@
     <section class="game-shell">
       <div class="game-head">
         <div><span class="eyebrow">MISSION 01</span><h2>ติดตั้งอุปกรณ์บนเมนบอร์ด</h2></div>
-        <div class="progress-wrap"><span id="progressText">ติดตั้งแล้ว 0 / 4</span><div class="progress"><i id="progressBar"></i></div></div>
+        <div class="hud">
+          <div class="timer-card"><small>TIME LEFT</small><strong id="timer">15</strong><span>วินาที</span></div>
+          <div class="progress-wrap"><span id="progressText">ติดตั้งแล้ว 0 / 4</span><div class="progress"><i id="progressBar"></i></div></div>
+          <div class="sound-control"><button id="soundToggle" class="secondary sound-btn" aria-pressed="true">🔊 เสียงเปิด</button></div>
+        </div>
       </div>
 
       <div class="playfield" id="playfield">
@@ -77,6 +81,13 @@
         <div class="score">คะแนน <b id="score">0</b></div>
       </div>
       <div class="feedback" id="feedback" role="status">กด “เปิดกล้องและเริ่มเล่น” เพื่อเริ่มภารกิจ</div>
+      <section class="result-panel" id="resultPanel" hidden>
+        <div class="result-icon" id="resultIcon">🏆</div>
+        <h3 id="resultTitle">ภารกิจสำเร็จ!</h3>
+        <p id="resultDetail">คุณติดตั้งอุปกรณ์ได้ครบ</p>
+        <div class="result-score"><small>คะแนนรวม</small><strong id="finalScore">0</strong></div>
+        <button id="playAgain" class="primary">เล่นอีกครั้ง</button>
+      </section>
     </section>
     <p class="privacy">🔒 ภาพจากเว็บแคมใช้ประมวลผลบนอุปกรณ์ของคุณ ไม่บันทึกหรืออัปโหลดวิดีโอ</p>
   </main>
