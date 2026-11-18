@@ -30,6 +30,8 @@ const TOTAL_PARTS=8,ROUND_SECONDS=60,DWELL_MS=3000;
 let landmarker,stream,running=false,wasPinching=false,held=null,score=0;
 let missionActive=false,missionEnd=0,timerFrame=0,lastShownSecond=ROUND_SECONDS;
 let dwellStartAt=0,soundOn=true,audioContext=null;
+// Smooth noisy landmark motion so the cursor does not jitter between frames.
+let smoothHandX=null,smoothHandY=null,lastHandAt=0;
 const placed=new Set();
 let heldHomeParent=null,heldHomeNext=null;
 
@@ -178,7 +180,15 @@ function loop(){
   if(video.readyState>=2){
     const result=landmarker.detectForVideo(video,performance.now()),hand=result.landmarks?.[0];
     if(hand){
-      const p=getScreenPoint(hand[8]),pinchDistance=distance(hand[4],hand[8]),pinching=wasPinching?pinchDistance<.095:pinchDistance<.075;
+      const raw=getScreenPoint(hand[8]),pinchDistance=distance(hand[4],hand[8]),pinching=wasPinching?pinchDistance<.095:pinchDistance<.075;
+      // Adaptive exponential smoothing: stronger filtering while pinching/dragging,
+      // lighter filtering during free movement for a responsive cursor.
+      const now=performance.now();
+      const alpha=held||pinching?0.22:0.34;
+      if(smoothHandX===null||now-lastHandAt>250){smoothHandX=raw.x;smoothHandY=raw.y;}
+      else{smoothHandX+=(raw.x-smoothHandX)*alpha;smoothHandY+=(raw.y-smoothHandY)*alpha;}
+      lastHandAt=now;
+      const p={x:smoothHandX,y:smoothHandY,localX:smoothHandX-playfield.getBoundingClientRect().left,localY:smoothHandY-playfield.getBoundingClientRect().top};
       cursor.style.display="grid";cursor.style.left=p.localX+"px";cursor.style.top=p.localY+"px";
       cursor.classList.toggle("pinching",pinching);
       updateStartDwell(p.x,p.y);
@@ -193,6 +203,7 @@ function loop(){
       }
     }else{
       cursor.style.display="none";
+      smoothHandX=null;smoothHandY=null;lastHandAt=0;
       if(held){
         held.classList.remove("dragging","selected");held.style.left="";held.style.top="";
         if(heldHomeParent)heldHomeParent.insertBefore(held,heldHomeNext&&heldHomeNext.parentNode===heldHomeParent?heldHomeNext:null);
