@@ -26,7 +26,7 @@ const startDwell=document.querySelector("#startDwell");
 const dwellFill=document.querySelector("#dwellFill");
 
 const names={cpu:"CPU",ram:"RAM",ssd:"M.2 SSD",gpu:"GPU",cooler:"CPU Cooler",psu:"Power Supply",hdd:"HDD",fan:"Case Fan"};
-const TOTAL_PARTS=8,ROUND_SECONDS=20,DWELL_MS=3000;
+const TOTAL_PARTS=8,ROUND_SECONDS=60,DWELL_MS=3000;
 let landmarker,stream,running=false,wasPinching=false,held=null,score=0;
 let missionActive=false,missionEnd=0,timerFrame=0,lastShownSecond=ROUND_SECONDS;
 let dwellStartAt=0,soundOn=true,audioContext=null;
@@ -59,7 +59,7 @@ function updateProgress(){
   scoreEl.textContent=score;
 }
 function showTimer(seconds){
-  timerEl.textContent=String(Math.max(0,seconds)).padStart(2,"0");
+  const safe=Math.max(0,seconds);timerEl.textContent=`${String(Math.floor(safe/60)).padStart(2,"0")}:${String(safe%60).padStart(2,"0")}`;
   timerCard.classList.toggle("urgent",seconds<=5);
 }
 function resetDwell(){
@@ -79,7 +79,7 @@ function startMission(){
   resetDwell();
   showTimer(ROUND_SECONDS);
   playSound("start");
-  say("เริ่มภารกิจแล้ว! มีเวลา 20 วินาที ติดตั้งอุปกรณ์ทั้ง 8 ชิ้นให้ถูกตำแหน่ง");
+  say("เริ่มภารกิจแล้ว! มีเวลา 1 นาที ติดตั้งอุปกรณ์ทั้ง 8 ชิ้นให้ถูกตำแหน่ง");
   gestureState.innerHTML='<span class="gesture-icon">🎮</span><span>เริ่มเกมแล้ว — จีบนิ้วเพื่อหยิบอุปกรณ์</span>';
   timerLoop();
 }
@@ -170,7 +170,7 @@ function loop(){
   if(video.readyState>=2){
     const result=landmarker.detectForVideo(video,performance.now()),hand=result.landmarks?.[0];
     if(hand){
-      const p=getScreenPoint(hand[8]),pinching=distance(hand[4],hand[8])<.055;
+      const p=getScreenPoint(hand[8]),pinchDistance=distance(hand[4],hand[8]),pinching=wasPinching?pinchDistance<.095:pinchDistance<.075;
       cursor.style.display="grid";cursor.style.left=p.localX+"px";cursor.style.top=p.localY+"px";
       cursor.classList.toggle("pinching",pinching);
       updateStartDwell(p.x,p.y);
@@ -207,7 +207,7 @@ async function startCamera(){
       try{
         landmarker=await HandLandmarker.createFromOptions(vision,{
           baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",delegate:"GPU"},
-          runningMode:"VIDEO",numHands:1,minHandDetectionConfidence:.55,minHandPresenceConfidence:.55,minTrackingConfidence:.55
+          runningMode:"VIDEO",numHands:1,minHandDetectionConfidence:.45,minHandPresenceConfidence:.45,minTrackingConfidence:.45
         });
       }catch(gpuError){
         console.warn("GPU delegate unavailable; retrying with CPU",gpuError);
