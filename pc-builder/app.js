@@ -30,8 +30,19 @@ const TOTAL_PARTS=8,ROUND_SECONDS=60,DWELL_MS=3000;
 let landmarker,stream,running=false,wasPinching=false,held=null,score=0;
 let missionActive=false,missionEnd=0,timerFrame=0,lastShownSecond=ROUND_SECONDS;
 let dwellStartAt=0,soundOn=true,audioContext=null;
-// Smooth noisy landmark motion so the cursor does not jitter between frames.
-let smoothHandX=null,smoothHandY=null,lastHandAt=0;
+// One Euro filter: suppress small landmark jitter while keeping fast hand movement responsive.
+let handFilterX=null,handFilterY=null,lastHandAt=0;
+function lowPass(previous,value,alpha){return previous===null?value:alpha*value+(1-alpha)*previous;}
+function oneEuro(value,filter,now,minCutoff=1.15,beta=0.025){
+  if(!filter||filter.value===null)return {value,derivative:0,time:now};
+  const dt=Math.max(1/120,(now-filter.time)/1000);
+  const rawDerivative=(value-filter.value)/dt;
+  const derivativeAlpha=1/(1+(1/(2*Math.PI*1.0))/dt);
+  const derivative=lowPass(filter.derivative,rawDerivative,derivativeAlpha);
+  const cutoff=minCutoff+beta*Math.abs(derivative);
+  const alpha=1/(1+(1/(2*Math.PI*cutoff))/dt);
+  return {value:lowPass(filter.value,value,alpha),derivative,time:now};
+}
 const placed=new Set();
 let heldHomeParent=null,heldHomeNext=null;
 
@@ -181,14 +192,20 @@ function loop(){
     const result=landmarker.detectForVideo(video,performance.now()),hand=result.landmarks?.[0];
     if(hand){
       const raw=getScreenPoint(hand[8]),pinchDistance=distance(hand[4],hand[8]),pinching=wasPinching?pinchDistance<.095:pinchDistance<.075;
-      // Adaptive exponential smoothing: stronger filtering while pinching/dragging,
-      // lighter filtering during free movement for a responsive cursor.
+      // Filter the actual screen coordinates with speed-adaptive smoothing.
+      // A slightly stronger baseline is used while holding a part.
       const now=performance.now();
-      const alpha=held||pinching?0.22:0.34;
-      if(smoothHandX===null||now-lastHandAt>250){smoothHandX=raw.x;smoothHandY=raw.y;}
-      else{smoothHandX+=(raw.x-smoothHandX)*alpha;smoothHandY+=(raw.y-smoothHandY)*alpha;}
+      if(!handFilterX||now-lastHandAt>250){
+        handFilterX={value:raw.x,derivative:0,time:now};
+        handFilterY={value:raw.y,derivative:0,time:now};
+      }else{
+        handFilterX=oneEuro(raw.x,handFilterX,now,held||pinching?0.85:1.15,held||pinching?0.018:0.025);
+        handFilterY=oneEuro(raw.y,handFilterY,now,held||pinching?0.85:1.15,held||pinching?0.018:0.025);
+      }
       lastHandAt=now;
-      const p={x:smoothHandX,y:smoothHandY,localX:smoothHandX-playfield.getBoundingClientRect().left,localY:smoothHandY-playfield.getBoundingClientRect().top};
+      const filteredX=handFilterX.value,filteredY=handFilterY.value;
+      const fieldRect=playfield.getBoundingClientRect();
+      const p={x:filteredX,y:filteredY,localX:filteredX-fieldRect.left,localY:filteredY-fieldRect.top};
       cursor.style.display="grid";cursor.style.left=p.localX+"px";cursor.style.top=p.localY+"px";
       cursor.classList.toggle("pinching",pinching);
       updateStartDwell(p.x,p.y);
@@ -203,7 +220,7 @@ function loop(){
       }
     }else{
       cursor.style.display="none";
-      smoothHandX=null;smoothHandY=null;lastHandAt=0;
+      handFilterX=null;handFilterY=null;lastHandAt=0;
       if(held){
         held.classList.remove("dragging","selected");held.style.left="";held.style.top="";
         if(heldHomeParent)heldHomeParent.insertBefore(held,heldHomeNext&&heldHomeNext.parentNode===heldHomeParent?heldHomeNext:null);
