@@ -41,3 +41,195 @@ body{background:radial-gradient(ellipse at 50% -10%,#14558a 0,transparent 45%),l
 .tip{background:#0b2b42;border:1px solid #1b6384;color:#c0eafa}
 .feedback{background:#0b2c43;border:1px solid #1c6387;color:#c0eafa}
 @media(max-width:800px){.timer-card{min-width:90px}.timer-card strong{font-size:22px}.part-card{min-height:72px}.part-art{width:52px;height:48px}}
+
+
+/* V0.5 — playful modern gaming workshop theme (visual-only refresh) */
+:root{
+  color-scheme:light;
+  --bg:#f4f2ff;--panel:#ffffff;--panel2:#f7f5ff;--line:#e4def5;
+  --cyan:#6957e8;--gold:#ff9f43;--green:#21b889;--text:#25213d;
+  --muted:#77738f;--red:#f05c78;
+}
+body{
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 8% 4%,#ffe3d8 0,transparent 29%),
+    radial-gradient(ellipse at 93% 8%,#dcd8ff 0,transparent 31%),
+    linear-gradient(145deg,#f8f6ff 0%,#f0f7ff 52%,#fff5ed 100%);
+}
+.topbar{
+  background:#ffffffdf;border-bottom:1px solid #e8e2f4;
+  box-shadow:0 5px 24px #5544a00c;backdrop-filter:blur(16px);
+}
+.brand{color:#292342;letter-spacing:1.5px}
+.brand small{color:#8a85a2}
+.brand-mark{
+  border:0;border-radius:13px;transform:none;color:white;
+  background:linear-gradient(145deg,#7965f2,#4d9ef4);
+  box-shadow:0 7px 18px #7764e94a;font-weight:800;
+}
+.top-status{color:#6f6a87}
+.top-status .live-dot{background:#c3bfd0}
+.top-status .live-dot.on{background:#22c58b;box-shadow:0 0 0 5px #22c58b20}
+main{padding-top:32px}
+.eyebrow{color:#7561e9;letter-spacing:1.8px}
+.intro h1{color:#282342;letter-spacing:-1.4px}
+.intro h1 em{
+  color:#725ce9;
+  background:linear-gradient(90deg,#7159e8,#3a9de9 58%,#19b994);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:none;
+}
+.lead{color:#77728f}
+.primary{
+  color:white;border:0;border-radius:13px;
+  background:linear-gradient(120deg,#735be9,#4e9bed);
+  box-shadow:0 8px 18px #705be83b;transition:transform .18s,box-shadow .18s,filter .18s;
+}
+.primary:hover{filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 12px 24px #705be84a}
+.secondary{
+  color:#514a70;background:#fff;border:1px solid #e4def3;border-radius:13px;
+  box-shadow:0 4px 12px #493b7910;transition:.18s;
+}
+.secondary:hover{border-color:#bcb0f4;background:#f8f6ff;transform:translateY(-1px)}
+.howto{gap:12px}
+.howto div{
+  color:#514b6b;background:#ffffffd9;border:1px solid #e8e2f4;
+  border-radius:15px;padding:14px 16px;box-shadow:0 6px 18px #493b7909;
+}
+.howto b{
+  width:31px;height:31px;display:grid;place-items:center;border-radius:10px;
+  color:#fff;background:linear-gradient(145deg,#8069f1,#55a7f0);font:700 11px 'IBM Plex Mono';
+}
+.game-shell{
+  border:1px solid #e4def4;border-radius:22px;overflow:hidden;
+  background:#ffffffd9;box-shadow:0 22px 60px #4a3a8218;
+  backdrop-filter:blur(12px);
+}
+.game-head{
+  padding:20px 24px;background:linear-gradient(100deg,#fff 0%,#f6f3ff 56%,#f0f8ff 100%);
+  border-bottom:1px solid #ebe6f5;
+}
+.game-head h2{color:#2e2948;font-size:19px}
+.hud{gap:13px}
+.timer-card{
+  min-width:116px;border:1px solid #e9ddff;border-radius:15px;
+  background:linear-gradient(145deg,#f4efff,#edf6ff);box-shadow:inset 0 1px #fff,0 5px 14px #7764b915;
+}
+.timer-card small{color:#81799e}
+.timer-card strong{color:#725ce9;text-shadow:none;font-size:27px}
+.timer-card span{color:#8c86a4}
+.timer-card.urgent{border-color:#f4a0b0;background:#fff0f2}
+.timer-card.urgent strong{color:#e94f70}
+.progress-wrap{color:#77728f}
+.progress{background:#e9e5f3;border-radius:20px}
+.progress i{background:linear-gradient(90deg,#8065ef,#47a9ef,#25c89b)}
+.sound-btn{border-radius:11px}
+.parts-panel,.board-panel{
+  background:linear-gradient(160deg,#fff 0%,#f9f7ff 100%);
+  border:1px solid #e7e1f2;border-radius:17px;padding:16px;
+  box-shadow:0 8px 22px #493b790b;
+}
+.panel-title{color:#393351}
+.panel-title small{color:#928ba8}
+.parts-list{gap:10px}
+.part-card{
+  color:#302b49;background:linear-gradient(145deg,#fff,#f6f4ff);
+  border:1px solid #e8e2f4;border-radius:13px;
+  box-shadow:0 4px 11px #4538750b;transition:transform .16s,border-color .16s,box-shadow .16s;
+}
+.part-card:hover,.part-card.selected{
+  border-color:#9b8af1;background:linear-gradient(145deg,#f4f0ff,#eff8ff);
+  box-shadow:0 8px 18px #7865d51e;transform:translateY(-2px);
+}
+.part-card b{color:#302b49}
+.part-card small{color:#85809c}
+.grab-hint{color:#715ce5;font-weight:600}
+.part-art{
+  border:1px solid #e4def4;border-radius:11px;
+  background:linear-gradient(145deg,#f1edff,#e9f5ff);
+  box-shadow:inset 0 1px #fff,0 3px 8px #493b790c;
+}
+.cpu-art:before{border-color:#9b91b2;box-shadow:0 0 0 4px #d9d3e8}
+.ram-art:before{box-shadow:0 5px 0 -2px #f4c85f}
+.gpu-art:before{background:#667b9a;border-color:#9baac2;box-shadow:inset 0 0 0 4px #435777}
+.tip{
+  color:#5f5681;background:linear-gradient(100deg,#f1edff,#eaf7ff);
+  border:1px solid #e4def8;border-radius:12px;
+}
+.tip span{color:#f19a3d}
+.board-panel{background:linear-gradient(145deg,#fff,#f6fbff)}
+.motherboard{
+  border:7px solid #b8c5d5;border-radius:17px;
+  background:
+    radial-gradient(circle at 18% 22%,#4d9c83 0 2px,transparent 3px),
+    radial-gradient(circle at 78% 75%,#4d9c83 0 2px,transparent 3px),
+    linear-gradient(135deg,#1d6655,#174c49 55%,#163d45);
+  box-shadow:inset 0 0 0 2px #e5edf4,inset 0 0 55px #082c2c88,0 9px 22px #254f4930;
+}
+.motherboard:before,.motherboard:after{border-color:#a7e5ca;opacity:.18}
+.board-label,.board-footer{color:#c0ead5}
+.board-footer span{color:#8fd5b2}
+.board-chipset{border-color:#79b69b;background:#173e36;color:#a8e3c2}
+.slot{
+  border:2px dashed #a6d5bd;border-radius:11px;
+  background:linear-gradient(145deg,#123e35e8,#0c2c2beF);
+  color:#f2fff8;box-shadow:inset 0 0 15px #8de0bd15,0 5px 14px #061b1a55;
+}
+.slot b{color:#d7f5e5}
+.slot-art{color:#9ce9c0}
+.slot.over{
+  border:2px solid #ffc45d;background:#7b5525e8;
+  box-shadow:0 0 0 5px #ffc45d30,0 0 25px #ffc45d70;
+}
+.slot.done{
+  border:2px solid #61e3ad;background:linear-gradient(145deg,#1d7958,#15503f);
+  box-shadow:0 0 0 4px #61e3ad22,0 0 20px #42eaa455;
+}
+.gesture-start{
+  border:0;border-radius:18px;
+  background:linear-gradient(130deg,#21bd91,#168eaa);
+  box-shadow:0 12px 28px #17a88955,inset 0 1px #ffffff66;
+  transition:transform .2s,box-shadow .2s;
+}
+.gesture-start:hover{transform:translateY(-3px);box-shadow:0 16px 34px #17a88970}
+.hand-cursor{
+  background:#7b68ed;color:white;
+  box-shadow:0 0 0 9px #7b68ed30,0 0 25px #7b68ed80,0 5px 20px #0003;
+}
+.hand-cursor.pinching{
+  background:#ffb44d;box-shadow:0 0 0 10px #ffb44d35,0 0 25px #ffb44d90;
+}
+.camera-box{
+  border:3px solid #fff;border-radius:14px;
+  box-shadow:0 8px 24px #132c4d3b,0 0 0 1px #d9d2ef;
+}
+.camera-caption{background:#30284dcc;color:#fff}
+.game-footer{border-color:#ebe6f5}
+.gesture-state{color:#77728f}
+.score{color:#77728f}
+.score b{color:#715ce9}
+.feedback{
+  color:#5d5680;background:#f0edff;border:1px solid #e2dcfa;border-radius:12px;
+}
+.feedback.good{color:#147653;background:#e8faf2;border-color:#bdebd7}
+.feedback.bad{color:#b13d58;background:#fff0f2;border-color:#f6c5d0}
+.result-panel{
+  border:1px solid #d8d0fa;border-radius:18px;
+  background:radial-gradient(ellipse at top,#f1edff,#edf8ff 72%);
+}
+.result-panel h3{color:#30294d}
+.result-panel p{color:#77728f}
+.result-score strong{color:#715ce9}
+.privacy{color:#85809b}
+.part-card.dragging{box-shadow:0 18px 38px #30264c35;border-color:#8b78f0}
+@media(max-width:800px){
+  .game-head{background:linear-gradient(120deg,#fff,#f5f1ff)}
+  .game-shell{border-radius:17px}
+  .parts-panel,.board-panel{border-radius:14px}
+  .timer-card{background:linear-gradient(145deg,#f4efff,#edf6ff)}
+}
+@media(prefers-reduced-motion:no-preference){
+  .brand-mark{animation:markFloat 4s ease-in-out infinite}
+  @keyframes markFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+}
