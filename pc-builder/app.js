@@ -31,6 +31,7 @@ let landmarker,stream,running=false,wasPinching=false,held=null,score=0;
 let missionActive=false,missionEnd=0,timerFrame=0,lastShownSecond=ROUND_SECONDS;
 let dwellStartAt=0,soundOn=true,audioContext=null;
 const placed=new Set();
+let heldHomeParent=null,heldHomeNext=null;
 
 function say(message,type=""){feedback.textContent=message;feedback.className="feedback "+type;}
 function audio(){
@@ -133,21 +134,28 @@ function beginGrab(x,y){
   if(!missionActive)return;
   const target=document.elementFromPoint(x,y)?.closest(".part-card");
   if(!target||target.classList.contains("placed"))return;
-  held=target;held.classList.add("dragging","selected");
-  held.style.left=(x-75)+"px";held.style.top=(y-28)+"px";
+  held=target;
+  heldHomeParent=held.parentNode;heldHomeNext=held.nextSibling;
+  held.classList.add("dragging","selected");
+  // Move the dragged card out of transformed/backdrop-filter containers so
+  // fixed viewport coordinates line up exactly with the hand cursor.
+  document.body.appendChild(held);
+  held.style.left=(x-110)+"px";held.style.top=(y-38)+"px";
   playSound("grab");
   gestureState.innerHTML='<span class="gesture-icon">🤏</span><span>กำลังหยิบ '+names[held.dataset.part]+'</span>';
   say("กำลังถือ "+names[held.dataset.part]+" — เล็งไปยังตำแหน่งติดตั้ง");
 }
 function moveGrab(x,y){
   if(!held)return;
-  held.style.left=(x-75)+"px";held.style.top=(y-28)+"px";
+  held.style.left=(x-110)+"px";held.style.top=(y-38)+"px";
   document.querySelectorAll(".slot").forEach(slot=>slot.classList.toggle("over",pointIn(slot,x,y)));
 }
 function endGrab(x,y){
   if(!held)return;
   const slot=document.elementFromPoint(x,y)?.closest(".slot"),part=held.dataset.part;
   held.classList.remove("dragging","selected");held.style.left="";held.style.top="";
+  if(heldHomeParent)heldHomeParent.insertBefore(held,heldHomeNext&&heldHomeNext.parentNode===heldHomeParent?heldHomeNext:null);
+  heldHomeParent=null;heldHomeNext=null;
   if(slot&&slot.dataset.slot===part&&!placed.has(part)){
     placed.add(part);score+=100;slot.classList.add("done");
     slot.querySelector(".slot-art").textContent=names[part]+" ✓";
@@ -185,7 +193,11 @@ function loop(){
       }
     }else{
       cursor.style.display="none";
-      if(held){held.classList.remove("dragging","selected");held.style.left="";held.style.top="";held=null;}
+      if(held){
+        held.classList.remove("dragging","selected");held.style.left="";held.style.top="";
+        if(heldHomeParent)heldHomeParent.insertBefore(held,heldHomeNext&&heldHomeNext.parentNode===heldHomeParent?heldHomeNext:null);
+        heldHomeParent=null;heldHomeNext=null;held=null;
+      }
       wasPinching=false;resetDwell();
       gestureState.innerHTML='<span class="gesture-icon">👋</span><span>ยังไม่พบมือ — ยกมือให้อยู่ในกรอบกล้อง</span>';
     }
@@ -229,7 +241,12 @@ async function startCamera(){
   }
 }
 function resetGame(){
-  cancelAnimationFrame(timerFrame);missionActive=false;placed.clear();score=0;held=null;wasPinching=false;
+  cancelAnimationFrame(timerFrame);missionActive=false;placed.clear();score=0;
+  if(held){
+    held.classList.remove("dragging","selected");held.style.left="";held.style.top="";
+    if(heldHomeParent)heldHomeParent.insertBefore(held,heldHomeNext&&heldHomeNext.parentNode===heldHomeParent?heldHomeNext:null);
+  }
+  held=null;heldHomeParent=null;heldHomeNext=null;wasPinching=false;
   document.querySelectorAll(".slot").forEach(s=>{s.classList.remove("done","over");s.querySelector(".slot-art").textContent=s.dataset.slot.toUpperCase();});
   document.querySelectorAll(".part-card").forEach(c=>{c.classList.remove("placed","selected","dragging");c.querySelector(".grab-hint").textContent="หยิบ";c.style.left="";c.style.top="";});
   updateProgress();resultPanel.hidden=true;showTimer(ROUND_SECONDS);resetDwell();
