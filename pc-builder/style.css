@@ -233,3 +233,85 @@ main{padding-top:32px}
   .brand-mark{animation:markFloat 4s ease-in-out infinite}
   @keyframes markFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 }
+
+
+/* V0.6 — professional computer repair workshop atmosphere
+   Background/surface styling only. Game layout, controls and hand tracking untouched. */
+:root{
+  --bg:#10151b;
+  --panel:#1a222b;
+  --panel2:#222d37;
+  --line:#394754;
+  --text:#e7edf2;
+  --muted:#a4b0ba;
+}
+body{
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 50% -18%,#394957 0,transparent 44%),
+    radial-gradient(ellipse at 8% 48%,#202d38 0,transparent 36%),
+    radial-gradient(ellipse at 92% 72%,#252b31 0,transparent 38%),
+    repeating-linear-gradient(0deg,transparent 0 39px,#ffffff06 40px),
+    repeating-linear-gradient(90deg,transparent 0 39px,#ffffff06 40px),
+    linear-gradient(145deg,#0c1116 0%,#171e25 52%,#10161c 100%);
+}
+.topbar{
+  background:linear-gradient(180deg,#10171eeF,#151e26eF);
+  border-bottom:1px solid #43515d;
+  box-shadow:0 8px 28px #0008;
+  backdrop-filter:blur(14px);
+}
+.brand{color:#edf2f6}
+.brand small{color:#9eabb6}
+.brand-mark{
+  color:#d8e1e8;
+  background:linear-gradient(145deg,#46545f,#202a33);
+  border:1px solid #7c8b97;
+  box-shadow:inset 0 1px #ffffff25,0 5px 14px #0008;
+}
+.top-status{color:#aab6c0}
+.eyebrow{color:#9bb3c3}
+.intro h1{color:#edf2f6}
+.intro h1 em{
+  color:#c4d0d9;
+  background:linear-gradient(90deg,#e1e8ed,#9eafbc 60%,#d2b887);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:none;
+}
+.lead{color:#aab6c0}
+.howto div{
+  color:#d4dde4;
+  background:linear-gradient(145deg,#222c35,#171f27);
+  border:1px solid #3b4a56;
+  box-shadow:inset 0 1px #ffffff0b,0 8px 20px #0005;
+}
+.howto b{
+  color:#f0d5a0;
+  background:linear-gradient(145deg,#596773,#303c46);
+}
+.game-shell{
+  background:linear-gradient(145deg,#1b252eF5,#111920F5);
+  border:1px solid #46545f;
+  box-shadow:0 24px 70px #000a,inset 0 1px #ffffff0c;
+  backdrop-filter:blur(12px);
+}
+.game-head{
+  background:linear-gradient(100deg,#252f38,#1a242d 58%,#202a33);
+  border-bottom:1px solid #43515d;
+}
+.game-head h2{color:#e8eef3}
+.parts-panel,.board-panel{
+  background:linear-gradient(155deg,#202a33,#151d25);
+  border:1px solid #3c4a56;
+  box-shadow:inset 0 1px #ffffff0a,0 10px 24px #0005;
+}
+.panel-title{color:#e0e7ec}
+.panel-title small{color:#a4b0ba}
+.game-footer{border-color:#394752}
+.gesture-state,.score{color:#aab6c0}
+.privacy{color:#8997a2}
+@media(max-width:800px){
+  .game-head{background:linear-gradient(120deg,#252f38,#1a242d)}
+}
